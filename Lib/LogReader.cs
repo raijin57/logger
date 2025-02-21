@@ -1,5 +1,6 @@
 ﻿using Logs;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 
 namespace Lib
 {
@@ -12,6 +13,7 @@ namespace Lib
         /// <returns></returns>
         static async Task<List<Log>> Read(string path)
         {
+            int skippedCounter = 0;
             // Список структур - логов.
             List<Log> logs = new List<Log>();
             try
@@ -37,6 +39,7 @@ namespace Lib
                             }
                             catch (FormatException)
                             { // может считать количество пропущенных и причину?..
+                                skippedCounter++;
                                 continue;
                             }
                         }
@@ -45,8 +48,9 @@ namespace Lib
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Произошла ошибка при чтении файла: {ex.Message}");
+                Console.WriteLine($"Произошла ошибка при чтении файла. {ex.ToString()}");
             }
+            Console.WriteLine($"Некорректных строк (ошибка при форматировании), которые были пропущены: {skippedCounter}");
             return logs;
         }
     }
