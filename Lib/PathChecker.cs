@@ -1,8 +1,9 @@
-﻿namespace Lib
+﻿using Logs;
+namespace Lib
 {
     public static class PathChecker
     {
-        public static void isCorrectPath(string path)
+        public static async Task<List<Log>> isCorrectPath(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -24,7 +25,7 @@
                 throw new UnauthorizedAccessException("Недостаточно прав для доступа к файлу.");
             }
             // Отправляем файл на чтение, если путь оказался корректен (отправляем сразу отсюда, ибо зачем нам ещё проверка на корректность пути, если не для этого метода?).
-            LogReader.Read(path);
+            return await LogReader.Read(path);
         }
     }
 }
