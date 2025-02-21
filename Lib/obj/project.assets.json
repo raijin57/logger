@@ -2,19 +2,6 @@
   "version": 3,
   "targets": {
     "net8.0": {
-      "Lib/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "dependencies": {
-          "Logs": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/Lib.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Lib.dll": {}
-        }
-      },
       "Logs/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
@@ -28,11 +15,6 @@
     }
   },
   "libraries": {
-    "Lib/1.0.0": {
-      "type": "project",
-      "path": "../Lib/Lib.csproj",
-      "msbuildProject": "../Lib/Lib.csproj"
-    },
     "Logs/1.0.0": {
       "type": "project",
       "path": "../Logs/Logs.csproj",
@@ -41,7 +23,6 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "Lib >= 1.0.0",
       "Logs >= 1.0.0"
     ]
   },
@@ -52,11 +33,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2.csproj",
-      "projectName": "LogAnalyzerasProject3.2",
-      "projectPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2.csproj",
+      "projectUniqueName": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\Lib\\Lib.csproj",
+      "projectName": "Lib",
+      "projectPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\Lib\\Lib.csproj",
       "packagesPath": "C:\\Users\\Arsen\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\obj\\",
+      "outputPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\Lib\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -77,9 +58,6 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\Lib\\Lib.csproj": {
-              "projectPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\Lib\\Lib.csproj"
-            },
             "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\Logs\\Logs.csproj": {
               "projectPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\Logs\\Logs.csproj"
             }

@@ -1,0 +1,53 @@
+﻿using Logs;
+using System.Globalization;
+
+namespace Lib
+{
+    public static class LogReader
+    {
+        /// <summary>
+        /// Асинхронный метод, читающий список логов по указанному файлу.
+        /// </summary>
+        /// <param name="path">Путь к файлу в строковом виде.</param>
+        /// <returns></returns>
+        static async Task<List<Log>> Read(string path)
+        {
+            // Список структур - логов.
+            List<Log> logs = new List<Log>();
+            try
+            { // Читаем файл.
+                using (StreamReader reader = new StreamReader(path))
+                {
+                    string? line;
+                    // Пока файл не закончится.
+                    while ((line = await reader.ReadLineAsync()) != null)
+                    {
+                        // Проверяем, что три поля (ожидаем "дата", "важность", "сообщение").
+                        if (line.Split(" ").Length == 3)
+                        {
+                            // Удаляем лишние символы и выделяем интересующие фрагменты.
+                            string[] splitted = line.Replace("[", "").Replace("]", "").Split(" ");
+                            try
+                            {
+                                // Парсим, согласно формату.
+                                DateTime formattedDateTime = DateTime.ParseExact(splitted[0], "yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture);
+                                // Формируем объект и добавляем в итоговый список.
+                                Log newLog = new Log(formattedDateTime, splitted[1], splitted[2]);
+                                logs.Add(newLog);
+                            }
+                            catch (FormatException)
+                            { // может считать количество пропущенных и причину?..
+                                continue;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Произошла ошибка при чтении файла: {ex.Message}");
+            }
+            return logs;
+        }
+    }
+}
