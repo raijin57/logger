@@ -13,7 +13,7 @@ namespace Lib
         static async Task Main()
         {
             while (true)
-            { 
+            {
                 //Пример, как получить данные.
                 //List<Log> a = await PathChecker.isCorrectPath("");
             }
