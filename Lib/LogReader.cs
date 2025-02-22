@@ -25,11 +25,11 @@ namespace Lib
                     // Пока файл не закончится.
                     while ((line = await reader.ReadLineAsync()) != null)
                     {
+                        // Удаляем лишние символы и выделяем интересующие фрагменты.
+                        string[] splitted = line.Replace("[", "").Replace("] ", "_").Split("_");
                         // Проверяем, что три поля (ожидаем "дата", "важность", "сообщение").
-                        if (line.Split(" ").Length == 3)
+                        if (splitted.Length == 3)
                         {
-                            // Удаляем лишние символы и выделяем интересующие фрагменты.
-                            string[] splitted = line.Replace("[", "").Replace("]", "").Split(" ");
                             try
                             {
                                 // Парсим, согласно формату.
@@ -51,7 +51,7 @@ namespace Lib
             {
                 Console.WriteLine($"Произошла ошибка при чтении файла. {ex.ToString()}");
             }
-            Console.WriteLine($"Некорректных строк (ошибка при форматировании), которые были пропущены: {skippedCounter}");
+            Console.WriteLine($"Некорректных строк (ошибка при форматировании), которые были пропущены: {skippedCounter}\n");
             return logs;
         }
     }

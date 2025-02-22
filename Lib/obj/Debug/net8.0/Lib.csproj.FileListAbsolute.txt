@@ -11,3 +11,6 @@ C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\Lib\obj\Debug\net8.0\refint\
 C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\Lib\obj\Debug\net8.0\Lib.pdb
 C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\Lib\obj\Debug\net8.0\ref\Lib.dll
 C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\Lib\obj\Debug\net8.0\Lib.csproj.AssemblyReference.cache
+C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\Lib\bin\Debug\net8.0\Logs.dll
+C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\Lib\bin\Debug\net8.0\Logs.pdb
+C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\Lib\obj\Debug\net8.0\Lib.csproj.Up2Date

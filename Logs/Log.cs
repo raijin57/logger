@@ -15,5 +15,9 @@
             level = importanceLevel;
             this.message = message;
         }
+        public override string ToString()
+        {
+            return $"[{DateTime}] [{level}] [{message}]";
+        }
     }
 }
