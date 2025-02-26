@@ -26,7 +26,7 @@ namespace Logs
         /// </summary>
         /// <param name="level">Уровень важности.</param>
         /// <returns>Метод-фильтр для сортировки.</returns>
-        internal static Func<Log, bool> FilterByLevel(string level)
+        public static Func<Log, bool> FilterByLevel(string level)
         {
             return log => log.level.Equals(level, StringComparison.OrdinalIgnoreCase);
         }
@@ -36,7 +36,7 @@ namespace Logs
         /// </summary>
         /// <param name="keyword">Ключевое слово.</param>
         /// <returns>Метод-фильтр для сортировки.</returns>
-        internal static Func<Log, bool> FilterByMessage(string keyword)
+        public static Func<Log, bool> FilterByMessage(string keyword)
         {
             return log => log.message.Contains(keyword, StringComparison.OrdinalIgnoreCase);
         }
@@ -45,7 +45,7 @@ namespace Logs
         /// Метод для получения корректных значений диапазона дат, для дальнейшей фильтрации.
         /// </summary>
         /// <returns>Вызывает метод-фильтр фильтрации по диапазону дат.</returns>
-        internal static Func<Log, bool>? GetDateFilter()
+        public static Func<Log, bool>? GetDateFilter()
         {
             DateTime startDate, endDate;
 
@@ -128,7 +128,7 @@ namespace Logs
         /// </summary>
         /// <param name="filter">Метод-фильтр.</param>
         /// <returns>Строка с названием.</returns>
-        internal static string GetFilterDescription(Func<Log, bool> filter)
+        public static string GetFilterDescription(Func<Log, bool> filter)
         {
             if (filter == FilterByDate(default, default))
                 return "Фильтр по дате";
