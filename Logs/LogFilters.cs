@@ -83,7 +83,6 @@ namespace Logs
         /// <summary>
         /// Метод, позволяющий удалить фильтрации из списка фильтраций, которые будут выполнены.
         /// </summary>
-        /// <param name="filters">Список с методами-фильтрами.</param>
         public static void ReorderFilters()
         {
             if (filters.Count == 0)
@@ -208,6 +207,11 @@ namespace Logs
         /// <param name="logs">Список с логами.</param>
         public static void PrintLogs(List<Log> logs)
         {
+            if (logs == null)
+            {
+                Console.WriteLine("Сперва введите данные в программу");
+                return;
+            }
             foreach (var log in logs)
             {
                 Console.WriteLine(log);

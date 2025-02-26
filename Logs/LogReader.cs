@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using Lib;
 using System.Runtime.CompilerServices;
 
 namespace Logs
@@ -68,7 +67,8 @@ namespace Logs
         {
             if (_logsRead == null)
             {
-                return new List<Log>();
+                Console.WriteLine("Сперва загрузите данные в программу");
+                return null;
             }
             return _logsRead;
         }
