@@ -1,5 +1,6 @@
 ﻿using Library;
 using Logs;
+using Spectre.Console;
 
 namespace Lib
 {
@@ -14,62 +15,25 @@ namespace Lib
             while (true)
             {
                 Console.WriteLine("===Добро пожаловать в анализатор логов.===\n1. Загрузить данные\n2. Добавить фильтр\n3. Изменить порядок фильтров\n4. Применить фильтры\n5. Вывести список логов\n10. Выйти из программы");
-                string userChoice = Console.ReadLine();
+                string userChoice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Главное меню:")
+                    .AddChoices(new[] { "Загрузить данные", "Фильтрация данных", "Визуализация данных", "Сохранение данных", "Выход" }));
                 switch (userChoice)
                 {
-                    case "1":
-                        Console.WriteLine("Введите путь к файлу:");
-                        string? path = Console.ReadLine();
-                        Console.Clear();
-                        await PathChecker.isCorrectTxt(path);
+                    case "Загрузить данные":
+                        await LoadData();
                         break;
-
-                    case "2":
-                        LogFilters.SelectFilters();
+                    case "Фильтрация данных":
+                        await FilterMenu();
                         break;
-
-                    case "3":
-                        LogFilters.ReorderFilters();
+                    case "Визуализация данных":
+                        await VisualizeData();
                         break;
-
-                    /* Использование await LogReader.GetLogs() - вынужденная мера из-за проблем с видимостью переменных внутри switch.
-                     * 
-                     *  Почему-то..
-                     * 
-                     * case "1":
-                     *     ...
-                     *     List<Log> logs = await LogReader.GetLogs()
-                     *     break;
-                     * 
-                     * case "2":
-                     *     logs = ... <- жалуется, что logs не существует
-                     *     break;
-                     * 
-                     * ..но
-                     *
-                     * case "1":
-                     *     ...
-                     *     List<Log> logs = await LogReader.GetLogs()
-                     *     break;
-                     * 
-                     * case "2":
-                     *     List<Log> logs = await LogReader.GetLogs() <- жалуется на переопределение уже существующей переменной logs.
-                     *     ...
-                     *     break;
-                     * 
-                     * Sorry!
-                     */
-
-                    case "4":
-                        LogFilters.ApplyFilters(await LogReader.GetLogs());
+                    case "Сохранение данных":
+                        await SaveData();
                         break;
-
-                    case "5":
-                        LogFilters.PrintLogs(await LogReader.GetLogs());
-                        break;
-
-                    case "10":
-                        Console.WriteLine("Программа завершила свою работу.");
+                    case "Выход":
                         return;
                 }
             }

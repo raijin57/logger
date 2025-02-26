@@ -1,4 +1,5 @@
 ﻿using Logs;
+using Spectre.Console;
 namespace Library
 {
     public static class PathChecker
@@ -31,7 +32,7 @@ namespace Library
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                AnsiConsole.MarkupLine($"[red]{ex.Message}[/]");
                 return new List<Log>();
             }
         }

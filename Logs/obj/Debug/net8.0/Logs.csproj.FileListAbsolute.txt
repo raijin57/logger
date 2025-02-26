@@ -10,3 +10,15 @@ C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\Logs\obj\Debug\net8.0\Logs.d
 C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\Logs\obj\Debug\net8.0\refint\Logs.dll
 C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\Logs\obj\Debug\net8.0\Logs.pdb
 C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\Logs\obj\Debug\net8.0\ref\Logs.dll
+C:\Users\Arsen\Desktop\logger\Logs\bin\Debug\net8.0\Logs.deps.json
+C:\Users\Arsen\Desktop\logger\Logs\bin\Debug\net8.0\Logs.dll
+C:\Users\Arsen\Desktop\logger\Logs\bin\Debug\net8.0\Logs.pdb
+C:\Users\Arsen\Desktop\logger\Logs\obj\Debug\net8.0\Logs.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Arsen\Desktop\logger\Logs\obj\Debug\net8.0\Logs.AssemblyInfoInputs.cache
+C:\Users\Arsen\Desktop\logger\Logs\obj\Debug\net8.0\Logs.AssemblyInfo.cs
+C:\Users\Arsen\Desktop\logger\Logs\obj\Debug\net8.0\Logs.csproj.CoreCompileInputs.cache
+C:\Users\Arsen\Desktop\logger\Logs\obj\Debug\net8.0\Logs.sourcelink.json
+C:\Users\Arsen\Desktop\logger\Logs\obj\Debug\net8.0\Logs.dll
+C:\Users\Arsen\Desktop\logger\Logs\obj\Debug\net8.0\refint\Logs.dll
+C:\Users\Arsen\Desktop\logger\Logs\obj\Debug\net8.0\Logs.pdb
+C:\Users\Arsen\Desktop\logger\Logs\obj\Debug\net8.0\ref\Logs.dll

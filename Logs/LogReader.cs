@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Spectre.Console;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace Logs
@@ -52,9 +53,9 @@ namespace Logs
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Произошла ошибка при чтении файла. {ex.ToString()}");
+                AnsiConsole.MarkupLine($"[red]Произошла ошибка при чтении файла: {ex.Message}[/]");
             }
-            Console.WriteLine($"Некорректных строк (ошибка при форматировании), которые были пропущены: {skippedCounter}\n");
+            AnsiConsole.MarkupLine($"[yellow]Некорректных строк (ошибка при форматировании), которые были пропущены: {skippedCounter}[/]");
             _logsRead = logs;
             return logs;
         }
@@ -67,7 +68,7 @@ namespace Logs
         {
             if (_logsRead == null)
             {
-                Console.WriteLine("Сперва загрузите данные в программу");
+                AnsiConsole.MarkupLine("[red]Сперва загрузите данные в программу.[/]");
                 return null;
             }
             return _logsRead;

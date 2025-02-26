@@ -9,10 +9,19 @@
       "LogAnalyzerasProject3.2/1.0.0": {
         "dependencies": {
           "Lib": "1.0.0",
-          "Logs": "1.0.0"
+          "Logs": "1.0.0",
+          "Spectre.Console": "0.49.1"
         },
         "runtime": {
           "LogAnalyzerasProject3.2.dll": {}
+        }
+      },
+      "Spectre.Console/0.49.1": {
+        "runtime": {
+          "lib/net8.0/Spectre.Console.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.49.1.0"
+          }
         }
       },
       "Lib/1.0.0": {
@@ -41,6 +50,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Spectre.Console/0.49.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-USV+pdu49OJ3nCjxNuw1K9Zw/c1HCBbwbjXZp0EOn6wM99tFdAtN34KEBZUMyRuJuXlUMDqhd8Yq9obW2MslYA==",
+      "path": "spectre.console/0.49.1",
+      "hashPath": "spectre.console.0.49.1.nupkg.sha512"
     },
     "Lib/1.0.0": {
       "type": "project",
