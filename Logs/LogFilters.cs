@@ -167,7 +167,7 @@ namespace Logs
                         }
                         break;
                     case "2":
-                        Console.Write("Введите уровень важности (INFO, WARNING, ERROR): ");
+                        Console.Write("Введите уровень важности: ");
                         var level = Console.ReadLine();
                         filters.Add(FilterByLevel(level));
                         Console.WriteLine("Фильтр по уровню важности добавлен.");
