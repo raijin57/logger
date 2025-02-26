@@ -5,19 +5,19 @@
     /// </summary>
     public struct Log
     {
-        DateTime DateTime { get; set; }
-        string level;
-        string message;
+        public DateTime dateTime { get; set; }
+        public string level;
+        public string message;
 
         public Log(DateTime datetime, string importanceLevel, string message)
         {
-            DateTime = datetime;
+            dateTime = datetime;
             level = importanceLevel;
             this.message = message;
         }
         public override string ToString()
         {
-            return $"[{DateTime}] [{level}] [{message}]";
+            return $"[{dateTime}] [{level}] [{message}]";
         }
     }
 }
