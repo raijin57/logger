@@ -1,11 +1,15 @@
-﻿using Logs;
-using System.Globalization;
+﻿using System.Globalization;
+using Lib;
 using System.Runtime.CompilerServices;
 
-namespace Lib
+namespace Logs
 {
     public static class LogReader
     {
+        /// <summary>
+        /// Статическая переменная, в которой лежат данные из прочитанного файла.
+        /// </summary>
+        static List<Log> _logsRead;
         /// <summary>
         /// Асинхронный метод, читающий список логов по указанному файлу.
         /// </summary>
@@ -33,7 +37,7 @@ namespace Lib
                             try
                             {
                                 // Парсим, согласно формату.
-                                DateTime formattedDateTime = DateTime.ParseExact(splitted[0], "yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture);
+                                DateTime formattedDateTime = DateTime.ParseExact(splitted[0], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                                 // Формируем объект и добавляем в итоговый список.
                                 Log newLog = new Log(formattedDateTime, splitted[1], splitted[2]);
                                 logs.Add(newLog);
@@ -52,7 +56,21 @@ namespace Lib
                 Console.WriteLine($"Произошла ошибка при чтении файла. {ex.ToString()}");
             }
             Console.WriteLine($"Некорректных строк (ошибка при форматировании), которые были пропущены: {skippedCounter}\n");
+            _logsRead = logs;
             return logs;
+        }
+
+        /// <summary>
+        /// Метод, для получения прочитанных данных.
+        /// </summary>
+        /// <returns>Список с отформатированными данными.</returns>
+        public static async Task<List<Log>> GetLogs()
+        {
+            if (_logsRead == null)
+            {
+                return new List<Log>();
+            }
+            return _logsRead;
         }
     }
 }

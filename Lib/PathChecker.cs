@@ -1,5 +1,5 @@
 ﻿using Logs;
-namespace Lib
+namespace Library
 {
     public static class PathChecker
     {

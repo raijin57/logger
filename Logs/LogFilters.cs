@@ -57,7 +57,7 @@ namespace Logs
                 if (input?.ToLower() == "отмена")
                     return null;
 
-                if (DateTime.TryParseExact(input, "yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate))
+                if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate))
                     break;
 
                 Console.WriteLine("Некорректная дата. Попробуйте снова.");
@@ -71,7 +71,7 @@ namespace Logs
                 if (input?.ToLower() == "отмена")
                     return null;
 
-                if (DateTime.TryParseExact(input, "yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate))
+                if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate))
                     break;
 
                 Console.WriteLine("Некорректная дата. Попробуйте снова.");
@@ -202,6 +202,10 @@ namespace Logs
             }
         }
 
+        /// <summary>
+        /// Метод, выводящий на экран все логи.
+        /// </summary>
+        /// <param name="logs">Список с логами.</param>
         public static void PrintLogs(List<Log> logs)
         {
             foreach (var log in logs)

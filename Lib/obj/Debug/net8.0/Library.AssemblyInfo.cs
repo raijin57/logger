@@ -11,12 +11,13 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("LogAnalyzerasProject3.2")]
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("c2c1d649-fae5-4edd-b2a0-c0fd68d6bf00")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("Library")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+119d380e2de941731b825fd75f7a0ed4033cb74c")]
-[assembly: System.Reflection.AssemblyProductAttribute("LogAnalyzerasProject3.2")]
-[assembly: System.Reflection.AssemblyTitleAttribute("LogAnalyzerasProject3.2")]
+[assembly: System.Reflection.AssemblyProductAttribute("Library")]
+[assembly: System.Reflection.AssemblyTitleAttribute("Library")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Создано классом WriteCodeFragment MSBuild.
