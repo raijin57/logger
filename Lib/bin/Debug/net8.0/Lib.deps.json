@@ -7,14 +7,30 @@
   "targets": {
     ".NETCoreApp,Version=v8.0": {
       "Lib/1.0.0": {
+        "dependencies": {
+          "Logs": "1.0.0"
+        },
         "runtime": {
           "Lib.dll": {}
+        }
+      },
+      "Logs/1.0.0": {
+        "runtime": {
+          "Logs.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       }
     }
   },
   "libraries": {
     "Lib/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Logs/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

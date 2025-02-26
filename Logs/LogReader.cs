@@ -11,7 +11,7 @@ namespace Lib
         /// </summary>
         /// <param name="path">Путь к файлу в строковом виде.</param>
         /// <returns></returns>
-        internal static async Task<List<Log>> Read(string path)
+        public static async Task<List<Log>> Read(string path)
         {
             // Счётчик количества пропущенных строк ввиду ошибок.
             int skippedCounter = 0;

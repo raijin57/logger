@@ -15,12 +15,24 @@ namespace Lib
             while (true)
             {
                 //Пример, как получить данные.
-                List<Log> a = await PathChecker.isCorrectPath(@"C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\logs.txt");
+                List<Log> a = await PathChecker.isCorrectTxt(@"C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\logs.txt");
                 foreach (Log log in a)
                 {
                     Console.WriteLine(log);
                 }
                 break;
+                //string userChoice = Console.ReadLine();
+                //switch (userChoice) 
+                //{
+                //    case "1":
+
+                //        return;
+                //    case "2":
+
+                //        return;
+                //    case "10":
+                //        break;
+                //}
             }
         }
     }

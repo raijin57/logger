@@ -3,7 +3,7 @@ namespace Lib
 {
     public static class PathChecker
     {
-        public static async Task<List<Log>> isCorrectPath(string path)
+        public static async Task<List<Log>> isCorrectTxt(string path)
         {
             try
             {
