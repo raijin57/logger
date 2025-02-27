@@ -57,9 +57,9 @@ namespace Logs
             // Ввод начальной даты
             while (true)
             {
-                AnsiConsole.MarkupLine("Введите начальную дату (гггг-мм-дд чч-мм-сс) или 'отмена' для выхода: ");
+                AnsiConsole.MarkupLine("Введите начальную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
                 var input = Console.ReadLine();
-                if (input?.ToLower() == "отмена")
+                if (input?.ToLower() == "0")
                     return null;
 
                 if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate))
@@ -71,9 +71,9 @@ namespace Logs
             // Ввод конечной даты
             while (true)
             {
-                AnsiConsole.MarkupLine("Введите конечную дату (гггг-мм-дд чч-мм-сс) или 'отмена' для выхода: ");
+                AnsiConsole.MarkupLine("Введите конечную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
                 var input = Console.ReadLine();
-                if (input?.ToLower() == "отмена")
+                if (input?.ToLower() == "0")
                     return null;
 
                 if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate))
@@ -181,6 +181,7 @@ namespace Logs
                 // Удаляем элементы, которые НЕ удовлетворяют фильтру.
                 logs.RemoveAll(log => !filter(log)); 
             }
+            AnsiConsole.Clear();
             return;
         }
 
@@ -201,7 +202,7 @@ namespace Logs
                 var choice = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("Меню фильтрации:")
-                        .AddChoices(new[] { "Добавить фильтр", "Удалить фильтр", "Применить фильтры", "Назад" }));
+                        .AddChoices(["Добавить фильтр", "Удалить фильтр", "Применить фильтры", "Назад"]));
                 switch (choice)
                 {
                     case "Добавить фильтр":

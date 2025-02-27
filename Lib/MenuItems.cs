@@ -1,6 +1,8 @@
 ﻿using Library;
 using Logs;
+using ServiceLibrary;
 using Spectre.Console;
+using System.Diagnostics;
 using System.Text.Json;
 
 public static class MenuHandler
@@ -13,16 +15,15 @@ public static class MenuHandler
     {
         while (true)
         {
-            AnsiConsole.Markup("[red] HUI [/]");
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("[italic slowblink]Анализатор логов[/]")
-                    .AddChoices(new[] { "Загрузить данные", "Фильтрация данных", "Вывести логи", "Выход" }));
+                    .Title("[italic slowblink red]Анализатор логов[/]")
+                    .AddChoices(["Загрузить данные", "Фильтрация данных", "Вывести логи", "Визуализация", "Выход"]));
             switch (choice)
             {
                 case "Загрузить данные":
                     AnsiConsole.Clear();
-                    await LoadData();
+                    await LoadData(); 
                     break;
                 case "Фильтрация данных":
                     AnsiConsole.Clear();
@@ -30,6 +31,13 @@ public static class MenuHandler
                     break;
                 case "Вывести логи":
                     PrintLogs(LogFilters._logs);
+                    break;
+                case "Визуализация":
+                    //Visualization.BreakdownChart(LogFilters._logs);
+                    //AnsiConsole.MarkupLine("[dim gray]Нажмите Enter для выхода.[/]");
+                    //Console.ReadLine();
+                    //AnsiConsole.Clear();
+                    Visualization.ShowCalendar(LogFilters._logs);
                     break;
                 case "Выход":
                     return;
@@ -49,7 +57,7 @@ public static class MenuHandler
         LogFilters._logs = await PathChecker.isCorrectTxt(path);
         if (LogFilters._logs.Count > 0)
         {
-            AnsiConsole.MarkupLine("[darkorange3]Данные успешно загружены.[/]");
+            AnsiConsole.MarkupLine("[dodgerblue3]Данные успешно загружены.[/]");
         }
         else
         {

@@ -48,9 +48,7 @@ C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\LogA
 C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\bin\Debug\net8.0\LogAnalyzerasProject3.2.dll
 C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\bin\Debug\net8.0\LogAnalyzerasProject3.2.pdb
 C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\bin\Debug\net8.0\Spectre.Console.dll
-C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\bin\Debug\net8.0\Lib.dll
 C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\bin\Debug\net8.0\Logs.dll
-C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\bin\Debug\net8.0\Lib.pdb
 C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\bin\Debug\net8.0\Logs.pdb
 C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\obj\Debug\net8.0\LogAnalyzerasProject3.2.csproj.AssemblyReference.cache
 C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\obj\Debug\net8.0\LogAnalyzerasProject3.2.GeneratedMSBuildEditorConfig.editorconfig
@@ -64,3 +62,5 @@ C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\LogA
 C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\obj\Debug\net8.0\LogAnalyzerasProject3.2.pdb
 C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\obj\Debug\net8.0\LogAnalyzerasProject3.2.genruntimeconfig.cache
 C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\obj\Debug\net8.0\ref\LogAnalyzerasProject3.2.dll
+C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\bin\Debug\net8.0\ServiceLibrary.dll
+C:\Users\Arsen\source\repos\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\LogAnalyzerasProject3.2\bin\Debug\net8.0\ServiceLibrary.pdb
