@@ -51,11 +51,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\Logs\\Logs.csproj",
+      "projectUniqueName": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Logs\\Logs.csproj",
       "projectName": "Logs",
-      "projectPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\Logs\\Logs.csproj",
+      "projectPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Logs\\Logs.csproj",
       "packagesPath": "C:\\Users\\Arsen\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\Logs\\obj\\",
+      "outputPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Logs\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

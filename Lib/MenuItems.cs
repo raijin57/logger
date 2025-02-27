@@ -14,21 +14,25 @@ public class MenuHandler
         {
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("Главное меню:")
+                    .Title("=== Добро пожаловать! ===")
                     .AddChoices(new[] { "Загрузить данные", "Фильтрация данных", "Визуализация данных", "Сохранение данных", "Выход" }));
 
             switch (choice)
             {
                 case "Загрузить данные":
+                    AnsiConsole.Clear();
                     await LoadData();
                     break;
                 case "Фильтрация данных":
+                    AnsiConsole.Clear();
                     await FilterMenu();
                     break;
                 case "Визуализация данных":
+                    AnsiConsole.Clear();
                     await VisualizeData();
                     break;
                 case "Сохранение данных":
+                    AnsiConsole.Clear();
                     await SaveData();
                     break;
                 case "Выход":
@@ -60,6 +64,7 @@ public class MenuHandler
 
         while (true)
         {
+            AnsiConsole.Clear();
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("Меню фильтрации:")
@@ -68,9 +73,11 @@ public class MenuHandler
             switch (choice)
             {
                 case "Добавить фильтр":
+                    AnsiConsole.Clear();
                     await AddFilter(filters);
                     break;
                 case "Удалить фильтр":
+                    AnsiConsole.Clear();
                     RemoveFilter(filters);
                     break;
                 case "Назад":

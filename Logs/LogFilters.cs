@@ -130,11 +130,11 @@ namespace Logs
         /// <returns>Строка с названием.</returns>
         public static string GetFilterDescription(Func<Log, bool> filter)
         {
-            if (filter == FilterByDate(default, default))
+            if (filter.Method == FilterByDate(default, default).Method)
                 return "Фильтр по дате";
-            if (filter == FilterByLevel(default))
+            if (filter.Method == FilterByLevel(default).Method)
                 return "Фильтр по уровню важности";
-            if (filter == FilterByMessage(default))
+            if (filter.Method == FilterByMessage(default).Method)
                 return "Фильтр по ключевому слову";
             return "Неизвестный фильтр";
         }
