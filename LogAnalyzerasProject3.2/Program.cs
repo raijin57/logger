@@ -12,8 +12,7 @@ namespace Lib
         /// <returns></returns>
         static async Task Main()
         {
-            var menuHandler = new MenuHandler();
-            await menuHandler.RunMenu();
+            await MenuHandler.RunMenu();
         }
     }
 }

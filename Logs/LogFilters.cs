@@ -1,15 +1,18 @@
-﻿using System;
+﻿using Spectre.Console;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Logs
 {
     public static class LogFilters
     {
         private static List<Func<Log, bool>> filters = new List<Func<Log, bool>>();
+
         /// <summary>
         /// Метод-фильтр для сортировки по диапазону дат.
         /// </summary>
@@ -52,7 +55,7 @@ namespace Logs
             // Ввод начальной даты
             while (true)
             {
-                Console.Write("Введите начальную дату (гггг-мм-дд чч-мм-сс) или 'отмена' для выхода: ");
+                AnsiConsole.MarkupLine("Введите начальную дату (гггг-мм-дд чч-мм-сс) или 'отмена' для выхода: ");
                 var input = Console.ReadLine();
                 if (input?.ToLower() == "отмена")
                     return null;
@@ -60,13 +63,13 @@ namespace Logs
                 if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate))
                     break;
 
-                Console.WriteLine("Некорректная дата. Попробуйте снова.");
+                AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
             }
 
             // Ввод конечной даты
             while (true)
             {
-                Console.Write("Введите конечную дату (гггг-мм-дд чч-мм-сс) или 'отмена' для выхода: ");
+                AnsiConsole.MarkupLine("Введите конечную дату (гггг-мм-дд чч-мм-сс) или 'отмена' для выхода: ");
                 var input = Console.ReadLine();
                 if (input?.ToLower() == "отмена")
                     return null;
@@ -74,7 +77,7 @@ namespace Logs
                 if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate))
                     break;
 
-                Console.WriteLine("Некорректная дата. Попробуйте снова.");
+                AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
             }
 
             return FilterByDate(startDate, endDate);
@@ -83,44 +86,28 @@ namespace Logs
         /// <summary>
         /// Метод, позволяющий удалить фильтрации из списка фильтраций, которые будут выполнены.
         /// </summary>
-        public static void ReorderFilters()
+        private static void RemoveFilter(List<Func<Log, bool>> filters)
         {
             if (filters.Count == 0)
             {
-                Console.WriteLine("Нет фильтров для изменения.");
+                AnsiConsole.MarkupLine("[red]Нет фильтров для удаления.[/]");
                 return;
             }
 
-            Console.WriteLine("Текущие фильтры:");
-            for (int i = 0; i < filters.Count; i++)
+            var filterDescriptions = new List<string>();
+            foreach (var filter in filters)
             {
-                Console.WriteLine($"{i + 1}. {GetFilterDescription(filters[i])}");
+                filterDescriptions.Add(LogFilters.GetFilterDescription(filter));
             }
 
-            Console.Write("Введите индекс фильтра для удаления (или 0 для завершения): ");
-            while (true)
-            {
-                var input = Console.ReadLine();
-                if (input == "0") break;
+            var filterToRemove = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Выберите фильтр для удаления:")
+                    .AddChoices(filterDescriptions));
 
-                if (int.TryParse(input, out int index) && index > 0 && index <= filters.Count)
-                {
-                    filters.RemoveAt(index - 1);
-                    Console.WriteLine("Фильтр удалён.");
-                }
-                else
-                {
-                    Console.WriteLine("Неверный индекс. Попробуйте снова.");
-                }
-
-                Console.WriteLine("Текущие фильтры:");
-                for (int i = 0; i < filters.Count; i++)
-                {
-                    Console.WriteLine($"{i + 1}. {GetFilterDescription(filters[i])}");
-                }
-
-                Console.Write("Введите индекс фильтра для удаления (или 0 для завершения): ");
-            }
+            var index = filterDescriptions.IndexOf(filterToRemove);
+            filters.RemoveAt(index);
+            AnsiConsole.MarkupLine("[green]Фильтр удалён.[/]");
         }
 
         /// <summary>
@@ -143,47 +130,33 @@ namespace Logs
         /// Метод, позволяющий выбрать набор фильтраций
         /// </summary>
         /// <param name="filters">Список с методами-фильтрами.</param>
-        public static void SelectFilters()
+        public static async Task AddFilter(List<Func<Log, bool>> filters)
         {
-            Console.WriteLine("Доступные фильтры:");
-            Console.WriteLine("1. Фильтр по дате");
-            Console.WriteLine("2. Фильтр по уровню важности");
-            Console.WriteLine("3. Фильтр по ключевому слову в сообщении");
-            Console.Write("Выберите фильтр (или 0 для завершения): ");
+            var filterType = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Выберите тип фильтра:")
+                    .AddChoices(new[] { "По дате", "По уровню важности", "По ключевому слову" }));
 
-            while (true)
+            switch (filterType)
             {
-                var choice = Console.ReadLine();
-                if (choice == "0") break;
-
-                switch (choice)
-                {
-                    case "1":
-                        var dateFilter = GetDateFilter();
-                        if (dateFilter != null)
-                        {
-                            filters.Add(dateFilter);
-                            Console.WriteLine("Фильтр по дате добавлен.");
-                        }
-                        break;
-                    case "2":
-                        Console.Write("Введите уровень важности: ");
-                        var level = Console.ReadLine();
-                        filters.Add(FilterByLevel(level));
-                        Console.WriteLine("Фильтр по уровню важности добавлен.");
-                        break;
-                    case "3":
-                        Console.Write("Введите ключевое слово: ");
-                        var keyword = Console.ReadLine();
-                        filters.Add(FilterByMessage(keyword));
-                        Console.WriteLine("Фильтр по ключевому слову добавлен.");
-                        break;
-                    default:
-                        Console.WriteLine("Неверный выбор. Попробуйте снова.");
-                        break;
-                }
-
-                Console.WriteLine("Выберите следующий фильтр (или 0 для завершения): ");
+                case "По дате":
+                    var dateFilter = LogFilters.GetDateFilter();
+                    if (dateFilter != null)
+                    {
+                        filters.Add(dateFilter);
+                        AnsiConsole.MarkupLine("[green]Фильтр по дате добавлен.[/]");
+                    }
+                    break;
+                case "По уровню важности":
+                    var level = AnsiConsole.Ask<string>("Введите уровень важности (INFO, WARNING, ERROR):");
+                    filters.Add(LogFilters.FilterByLevel(level));
+                    AnsiConsole.MarkupLine("[green]Фильтр по уровню важности добавлен.[/]");
+                    break;
+                case "По ключевому слову":
+                    var keyword = AnsiConsole.Ask<string>("Введите ключевое слово:");
+                    filters.Add(LogFilters.FilterByMessage(keyword));
+                    AnsiConsole.MarkupLine("[green]Фильтр по ключевому слову добавлен.[/]");
+                    break;
             }
         }
 
@@ -217,6 +190,35 @@ namespace Logs
                 Console.WriteLine(log);
             }
             Console.WriteLine();
+        }
+
+        // Меню фильтрации
+        public static async Task FilterMenu()
+        {
+            var filters = new List<Func<Log, bool>>();
+
+            while (true)
+            {
+                AnsiConsole.Clear();
+                var choice = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Меню фильтрации:")
+                        .AddChoices(new[] { "Добавить фильтр", "Удалить фильтр", "Назад" }));
+
+                switch (choice)
+                {
+                    case "Добавить фильтр":
+                        AnsiConsole.Clear();
+                        await AddFilter(filters);
+                        break;
+                    case "Удалить фильтр":
+                        AnsiConsole.Clear();
+                        RemoveFilter(filters);
+                        break;
+                    case "Назад":
+                        return;
+                }
+            }
         }
     }
 }

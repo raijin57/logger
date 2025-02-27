@@ -11,7 +11,7 @@ namespace Logs
         /// </summary>
         static List<Log> _logsRead;
         /// <summary>
-        /// Асинхронный метод, читающий список логов по указанному файлу.
+        /// Асинхронный метод, форматирующий данные из файла к нужному виду.
         /// </summary>
         /// <param name="path">Путь к файлу в строковом виде.</param>
         /// <returns></returns>
