@@ -27,11 +27,11 @@ public static class MenuHandler
                     break;
                 case "Фильтрация данных":
                     AnsiConsole.Clear();
-                    await LogFilters.FilterMenu();
+                    LogFilters.FilterMenu();
                     break;
                 case "Визуализация":
                     AnsiConsole.Clear();
-                    await Visualization.VisualizationMenu();
+                    Visualization.VisualizationMenu();
                     break;
                 case "Выход":
                     return;

@@ -23,8 +23,13 @@ namespace ServiceLibrary
             while (true)
             {
                 AnsiConsole.Clear();
-                // Вычисление записей для текущей страницы
+                /* Вычисление записей для текущей страницы
+                 * 
+                 * Т.к. у нас PageSize логов на одной странице, значит для n-ой страницы мы первые n-1 * PageSize 
+                 * логов пропускаем и берем следующие PageSize, которые и будут на этой странице.
+                 */
                 List<Log> pageLogs = logs.Skip(page * PageSize).Take(PageSize).ToList();
+
                 Table table = new Table();
                 table.AddColumn("Дата");
                 table.AddColumn("Уровень важности");
@@ -70,6 +75,10 @@ namespace ServiceLibrary
             return (int)Math.Ceiling((double)totalItems / PageSize);
         }
 
+        /// <summary>
+        /// Метод, выводящий данные в виде диаграммы.
+        /// </summary>
+        /// <param name="logs">Список логов, которые будем визуализировать.</param>
         public static void BreakdownChart(List<Log> logs)
         {
             if (LogFilters._logs == null)
@@ -80,13 +89,14 @@ namespace ServiceLibrary
 
             DateTime startDate;
             DateTime endDate;
-            // Ввод начальной даты
+
             string choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                 .Title("Вывести данные за всё время или за период?")
                 .AddChoices(["За всё время", "Выбрать период"]));
             if (choice == "Выбрать период")
             {
+                // Ввод начальной даты.
                 while (true)
                 {
                     AnsiConsole.MarkupLine("Введите начальную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
@@ -96,7 +106,7 @@ namespace ServiceLibrary
 
                     if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate))
                         break;
-
+                    AnsiConsole.Clear();
                     AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
                 }
 
@@ -110,19 +120,20 @@ namespace ServiceLibrary
 
                     if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate))
                         break;
-
+                    AnsiConsole.Clear();
                     AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
                 }
             }
             else
             {
+                // Выбираем записи за всё время.
                 startDate = DateTime.MinValue;
                 endDate = DateTime.MaxValue;
             }
 
 
             AnsiConsole.Clear();
-            // Фильтрация логов по выбранному периоду
+            // Фильтрация логов, с выбором попавших в диапазон.
             var filteredLogs = logs
                 .Where(log => log.dateTime >= startDate && log.dateTime <= endDate)
                 .ToList();
@@ -133,7 +144,7 @@ namespace ServiceLibrary
                 return;
             }
 
-            // Группировка логов по уровням важности
+            // Группировка логов по уровням важности для дальнейшего вывода.
             var logGroups = filteredLogs
                 .GroupBy(log => log.level)
                 .Select(group => new
@@ -143,26 +154,29 @@ namespace ServiceLibrary
                 })
                 .ToList();
 
-            // Создание диаграммы
+            // Создание диаграммы.
             var chart = new BreakdownChart()
                 .FullSize()
                 .ShowPercentage();
 
             int colorMixer = 1;
-            // Добавление данных в диаграмму
+            // Добавление данных в диаграмму.
             foreach (var group in logGroups)
             {
                 colorMixer = (colorMixer * group.Count) % 255;
                 chart.AddItem(group.Level, group.Count, colorMixer);
                 colorMixer *= 3;
             }
-
-            // Отображение диаграммы
             AnsiConsole.Write(chart);
+            AnsiConsole.MarkupLine("[dim gray]Нажмите Enter для выхода.[/]");
+            Console.ReadLine();
         }
 
 
-        // Метод для отображения календаря на все даты с записями
+        /// <summary>
+        /// Метод, выводящий данные о логах, отображая их в календаре.
+        /// </summary>
+        /// <param name="logs">Список обрабатываемых логов.</param>
         public static void Calendar(List<Log> logs)
         {
             if (logs.Count == 0)
@@ -171,26 +185,24 @@ namespace ServiceLibrary
                 return;
             }
 
-            // Находим минимальную и максимальную даты
+            // Находим минимальную и максимальную даты.
             var minDate = logs.Min(log => log.dateTime);
             var maxDate = logs.Max(log => log.dateTime);
 
-            // Группировка логов по дням
+            // Группировка логов по дням.
             var logsByDay = logs
-                .GroupBy(log => log.dateTime.Date) // Группируем по дате (без времени)
+                .GroupBy(log => log.dateTime.Date)
                 .ToDictionary(group => group.Key, group => group.Count());
 
-            // Отображение календарей для каждого месяца в диапазоне
+            // Отображение календарей для каждого месяца в диапазоне.
             for (var date = minDate; date <= maxDate; date = date.AddMonths(1))
             {
                 int year = date.Year;
                 int month = date.Month;
-
-                // Создание календаря
                 var calendar = new Spectre.Console.Calendar(year, month)
-                    .HighlightStyle(Style.Plain); // Стиль по умолчанию для дней
+                    .HighlightStyle(Style.Plain);
 
-                // Добавление событий для дней с записями
+                // Добавление событий для дней с записями.
                 foreach (var day in logsByDay)
                 {
                     if (day.Key.Year == year && day.Key.Month == month)
@@ -198,43 +210,44 @@ namespace ServiceLibrary
                         int dayOfMonth = day.Key.Day;
                         int logCount = day.Value;
 
-                        // Определение цвета в зависимости от количества записей
+                        // Определение цвета в зависимости от количества записей.
                         Color color = GetColorForLogCount(logCount);
 
-                        // Добавление события с настройкой стиля
+                        // Добавление события с настройкой стиля.
                         calendar.AddCalendarEvent(year, month, dayOfMonth)
                                 .HighlightStyle(color);
                     }
                 }
 
-                // Отображение календаря
                 AnsiConsole.Write(calendar);
             }
-
-            // Ожидание нажатия Enter для выхода
             AnsiConsole.MarkupLine("[dim grey]Нажмите Enter для выхода.[/]");
             Console.ReadLine();
-
-            // Очистка консоли после выхода
             AnsiConsole.Clear();
         }
 
-        // Метод для определения цвета в зависимости от количества записей
+        /// <summary>
+        /// Метод, присваивающий цвет в соответствии с "интенсивностью" количества логов в указанный день.
+        /// </summary>
+        /// <param name="logCount">Количество логов в какой-то день</param>
+        /// <returns></returns>
         private static Color GetColorForLogCount(int logCount)
         {
-            if (logCount == 0) return Color.Default; // Нет записей
+            if (logCount == 0) return Color.Default;
 
-            // Градация цвета от светло-зелёного до тёмно-зелёного
             return logCount switch
             {
                 <= 5 => Color.Green1,
                 <= 10 => Color.Green3,
                 <= 20 => Color.Green4,
-                _ => Color.DarkOliveGreen1 // Более 20 записей
+                _ => Color.DarkOliveGreen1
             };
         }
 
-        public static async Task VisualizationMenu()
+        /// <summary>
+        /// Метод, выводящий меню с выбором визулизации.
+        /// </summary>
+        public static void VisualizationMenu()
         {
             if (LogFilters._logs == null)
             {
@@ -246,7 +259,7 @@ namespace ServiceLibrary
                 var choice = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("Выберите способ визуализации:")
-                        .AddChoices(["Таблицей", "Календарем", "Диаграммой", "Интерактивно", "Выход"]));
+                        .AddChoices(["Таблицей", "Календарем", "Диаграммой", "Выход"]));
                 switch (choice)
                 {
                     case "Таблицей":
@@ -257,8 +270,6 @@ namespace ServiceLibrary
                         break;
                     case "Диаграммой":
                         BreakdownChart(LogFilters._logs);
-                        AnsiConsole.MarkupLine("[dim gray]Нажмите Enter для выхода.[/]");
-                        Console.ReadLine();
                         AnsiConsole.Clear();
                         break;
                     case "Выход":

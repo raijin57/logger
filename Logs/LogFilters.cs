@@ -65,7 +65,7 @@ namespace Logs
 
                 if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate))
                     break;
-
+                AnsiConsole.Clear();
                 AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
             }
 
@@ -79,7 +79,7 @@ namespace Logs
 
                 if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate))
                     break;
-
+                AnsiConsole.Clear();
                 AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
             }
 
@@ -198,7 +198,7 @@ namespace Logs
         /// Меню применения фильтров.
         /// </summary>
         /// <returns>Меню с возможностью настройки фильтров.</returns>
-        public static async Task FilterMenu()
+        public static void FilterMenu()
         {
             if (_logs == null)
             {
