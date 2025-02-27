@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Vpx1fupUUUM=",
+  "dgSpecHash": "FeqtMtVwINo=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\Lib.csproj",
+  "projectFilePath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\ServiceLibrary.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Arsen\\.nuget\\packages\\spectre.console\\0.49.1\\spectre.console.0.49.1.nupkg.sha512"
   ],

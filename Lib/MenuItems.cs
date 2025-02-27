@@ -13,6 +13,7 @@ public static class MenuHandler
     {
         while (true)
         {
+            AnsiConsole.Markup("[red] HUI [/]");
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("[italic slowblink]Анализатор логов[/]")

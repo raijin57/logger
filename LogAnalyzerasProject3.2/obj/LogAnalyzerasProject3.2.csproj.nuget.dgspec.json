@@ -4,12 +4,12 @@
     "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\Lib.csproj": {
+    "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\ServiceLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\Lib.csproj",
-        "projectName": "Lib",
-        "projectPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\Lib.csproj",
+        "projectUniqueName": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\ServiceLibrary.csproj",
+        "projectName": "ServiceLibrary",
+        "projectPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\ServiceLibrary.csproj",
         "packagesPath": "C:\\Users\\Arsen\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\obj\\",
         "projectStyle": "PackageReference",
@@ -107,8 +107,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\Lib.csproj": {
-                "projectPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\Lib.csproj"
+              "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\ServiceLibrary.csproj": {
+                "projectPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\ServiceLibrary.csproj"
               },
               "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Logs\\Logs.csproj": {
                 "projectPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Logs\\Logs.csproj"
