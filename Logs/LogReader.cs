@@ -7,10 +7,6 @@ namespace Logs
     public static class LogReader
     {
         /// <summary>
-        /// Статическая переменная, в которой лежат данные из прочитанного файла.
-        /// </summary>
-        static List<Log> _logsRead;
-        /// <summary>
         /// Асинхронный метод, форматирующий данные из файла к нужному виду.
         /// </summary>
         /// <param name="path">Путь к файлу в строковом виде.</param>
@@ -22,7 +18,8 @@ namespace Logs
             // Список структур - логов.
             List<Log> logs = new List<Log>();
             try
-            { // Читаем файл.
+            {
+                // Читаем файл.
                 using (StreamReader reader = new StreamReader(path))
                 {
                     string? line;
@@ -56,22 +53,7 @@ namespace Logs
                 AnsiConsole.MarkupLine($"[red]Произошла ошибка при чтении файла: {ex.Message}[/]");
             }
             AnsiConsole.MarkupLine($"[yellow]Некорректных строк (ошибка при форматировании), которые были пропущены: {skippedCounter}[/]");
-            _logsRead = logs;
             return logs;
-        }
-
-        /// <summary>
-        /// Метод, для получения прочитанных данных.
-        /// </summary>
-        /// <returns>Список с отформатированными данными.</returns>
-        public static async Task<List<Log>> GetLogs()
-        {
-            if (_logsRead == null)
-            {
-                AnsiConsole.MarkupLine("[red]Сперва загрузите данные в программу.[/]");
-                return null;
-            }
-            return _logsRead;
         }
     }
 }

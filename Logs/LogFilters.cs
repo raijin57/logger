@@ -11,7 +11,9 @@ namespace Logs
 {
     public static class LogFilters
     {
-        private static List<Func<Log, bool>> filters = new List<Func<Log, bool>>();
+        public static List<Log> _logs;
+
+        public static List<Func<Log, bool>> filters = new List<Func<Log, bool>>();
 
         /// <summary>
         /// Метод-фильтр для сортировки по диапазону дат.
@@ -97,7 +99,7 @@ namespace Logs
             var filterDescriptions = new List<string>();
             foreach (var filter in filters)
             {
-                filterDescriptions.Add(LogFilters.GetFilterDescription(filter));
+                filterDescriptions.Add(GetFilterDescription(filter));
             }
 
             var filterToRemove = AnsiConsole.Prompt(
@@ -135,28 +137,34 @@ namespace Logs
             var filterType = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("Выберите тип фильтра:")
-                    .AddChoices(new[] { "По дате", "По уровню важности", "По ключевому слову" }));
+                    .AddChoices(new[] { "По дате", "По уровню важности", "По ключевому слову", "Назад" }));
 
             switch (filterType)
             {
                 case "По дате":
-                    var dateFilter = LogFilters.GetDateFilter();
+                    var dateFilter = GetDateFilter();
                     if (dateFilter != null)
                     {
                         filters.Add(dateFilter);
+                        AnsiConsole.Clear();
                         AnsiConsole.MarkupLine("[green]Фильтр по дате добавлен.[/]");
                     }
                     break;
                 case "По уровню важности":
                     var level = AnsiConsole.Ask<string>("Введите уровень важности (INFO, WARNING, ERROR):");
-                    filters.Add(LogFilters.FilterByLevel(level));
+                    filters.Add(FilterByLevel(level));
+                    AnsiConsole.Clear();
                     AnsiConsole.MarkupLine("[green]Фильтр по уровню важности добавлен.[/]");
                     break;
                 case "По ключевому слову":
                     var keyword = AnsiConsole.Ask<string>("Введите ключевое слово:");
-                    filters.Add(LogFilters.FilterByMessage(keyword));
+                    filters.Add(FilterByMessage(keyword));
+                    AnsiConsole.Clear();
                     AnsiConsole.MarkupLine("[green]Фильтр по ключевому слову добавлен.[/]");
                     break;
+                case "Назад":
+                    AnsiConsole.Clear();
+                    return;
             }
         }
 
@@ -167,44 +175,33 @@ namespace Logs
         /// <param name="filters">Список с методами-фильтрами.</param>
         public static void ApplyFilters(List<Log> logs)
         {
+            if (filters == null) return;
             foreach (var filter in filters)
             {
                 // Удаляем элементы, которые НЕ удовлетворяют фильтру.
                 logs.RemoveAll(log => !filter(log)); 
             }
+            return;
         }
+
 
         /// <summary>
-        /// Метод, выводящий на экран все логи.
+        /// Меню применения фильтров.
         /// </summary>
-        /// <param name="logs">Список с логами.</param>
-        public static void PrintLogs(List<Log> logs)
-        {
-            if (logs == null)
-            {
-                Console.WriteLine("Сперва введите данные в программу");
-                return;
-            }
-            foreach (var log in logs)
-            {
-                Console.WriteLine(log);
-            }
-            Console.WriteLine();
-        }
-
-        // Меню фильтрации
+        /// <returns>Меню с возможностью настройки фильтров.</returns>
         public static async Task FilterMenu()
         {
-            var filters = new List<Func<Log, bool>>();
-
+            if (_logs == null)
+            {
+                AnsiConsole.MarkupLine("[red]Сперва введите данные в программу.[/]");
+                return;
+            }
             while (true)
             {
-                AnsiConsole.Clear();
                 var choice = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("Меню фильтрации:")
-                        .AddChoices(new[] { "Добавить фильтр", "Удалить фильтр", "Назад" }));
-
+                        .AddChoices(new[] { "Добавить фильтр", "Удалить фильтр", "Применить фильтры", "Назад" }));
                 switch (choice)
                 {
                     case "Добавить фильтр":
@@ -215,6 +212,10 @@ namespace Logs
                         AnsiConsole.Clear();
                         RemoveFilter(filters);
                         break;
+                    case "Применить фильтры":
+                        ApplyFilters(_logs);
+                        AnsiConsole.MarkupLine("[dodgerblue3]Фильтры были применены.[/]");
+                        return;
                     case "Назад":
                         return;
                 }
