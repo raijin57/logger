@@ -1,6 +1,7 @@
 ﻿using Spectre.Console;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -151,13 +152,15 @@ namespace Logs
                     }
                     break;
                 case "По уровню важности":
-                    var level = AnsiConsole.Ask<string>("Введите уровень важности (INFO, WARNING, ERROR):");
+                    var level = AnsiConsole.Ask<string>("Введите уровень важности (или \"0\" для отмены):");
+                    if (level == "0") break;
                     filters.Add(FilterByLevel(level));
                     AnsiConsole.Clear();
                     AnsiConsole.MarkupLine("[green]Фильтр по уровню важности добавлен.[/]");
                     break;
                 case "По ключевому слову":
-                    var keyword = AnsiConsole.Ask<string>("Введите ключевое слово:");
+                    var keyword = AnsiConsole.Ask<string>("Введите ключевое слово (или \"0\" для отмены):");
+                    if (keyword == "0") break;
                     filters.Add(FilterByMessage(keyword));
                     AnsiConsole.Clear();
                     AnsiConsole.MarkupLine("[green]Фильтр по ключевому слову добавлен.[/]");
@@ -175,13 +178,18 @@ namespace Logs
         /// <param name="filters">Список с методами-фильтрами.</param>
         public static void ApplyFilters(List<Log> logs)
         {
-            if (filters == null) return;
+            if (filters == null || filters.Count == 0)
+            {
+                AnsiConsole.MarkupLine("[red]Сперва введите данные в программу.[/]");
+                return;
+            }
             foreach (var filter in filters)
             {
                 // Удаляем элементы, которые НЕ удовлетворяют фильтру.
                 logs.RemoveAll(log => !filter(log)); 
             }
             AnsiConsole.Clear();
+            AnsiConsole.MarkupLine("[dodgerblue3]Фильтры были применены.[/]");
             return;
         }
 
@@ -207,7 +215,7 @@ namespace Logs
                 {
                     case "Добавить фильтр":
                         AnsiConsole.Clear();
-                        await AddFilter(filters);
+                        AddFilter(filters);
                         break;
                     case "Удалить фильтр":
                         AnsiConsole.Clear();
@@ -215,7 +223,6 @@ namespace Logs
                         break;
                     case "Применить фильтры":
                         ApplyFilters(_logs);
-                        AnsiConsole.MarkupLine("[dodgerblue3]Фильтры были применены.[/]");
                         return;
                     case "Назад":
                         return;

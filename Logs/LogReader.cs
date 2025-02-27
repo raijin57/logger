@@ -40,10 +40,15 @@ namespace Logs
                                 logs.Add(newLog);
                             }
                             catch (FormatException)
-                            { // может считать количество пропущенных и причину?..
+                            { 
                                 skippedCounter++;
                                 continue;
                             }
+                        }
+                        else
+                        {
+                            skippedCounter++;
+                            continue;
                         }
                     }
                 }

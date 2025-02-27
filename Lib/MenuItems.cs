@@ -18,7 +18,7 @@ public static class MenuHandler
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("[italic slowblink red]Анализатор логов[/]")
-                    .AddChoices(["Загрузить данные", "Фильтрация данных", "Вывести логи", "Визуализация", "Выход"]));
+                    .AddChoices(["Загрузить данные", "Фильтрация данных", "Визуализация", "Выход"]));
             switch (choice)
             {
                 case "Загрузить данные":
@@ -29,15 +29,9 @@ public static class MenuHandler
                     AnsiConsole.Clear();
                     await LogFilters.FilterMenu();
                     break;
-                case "Вывести логи":
-                    PrintLogs(LogFilters._logs);
-                    break;
                 case "Визуализация":
-                    //Visualization.BreakdownChart(LogFilters._logs);
-                    //AnsiConsole.MarkupLine("[dim gray]Нажмите Enter для выхода.[/]");
-                    //Console.ReadLine();
-                    //AnsiConsole.Clear();
-                    Visualization.ShowCalendar(LogFilters._logs);
+                    AnsiConsole.Clear();
+                    await Visualization.VisualizationMenu();
                     break;
                 case "Выход":
                     return;
@@ -62,28 +56,6 @@ public static class MenuHandler
         else
         {
             AnsiConsole.MarkupLine("[red]Не удалось загрузить данные.[/]");
-        }
-    }
-
-    /// <summary>
-    /// Метод, выводящий на экран все логи.
-    /// </summary>
-    /// <param name="logs">Список с логами.</param>
-    public static void PrintLogs(List<Log> logs)
-    {
-        if (logs == null)
-        {
-            AnsiConsole.Clear();
-            AnsiConsole.MarkupLine("[red]Сперва введите данные в программу.[/]");
-            return;
-        }
-        else
-        {
-            AnsiConsole.Clear();
-            foreach (var log in logs)
-            {
-                AnsiConsole.WriteLine(log.ToString());
-            }
         }
     }
 }

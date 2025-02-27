@@ -81,32 +81,46 @@ namespace ServiceLibrary
             DateTime startDate;
             DateTime endDate;
             // Ввод начальной даты
-            while (true)
+            string choice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                .Title("Вывести данные за всё время или за период?")
+                .AddChoices(["За всё время", "Выбрать период"]));
+            if (choice == "Выбрать период")
             {
-                AnsiConsole.MarkupLine("Введите начальную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
-                var input = Console.ReadLine();
-                if (input?.ToLower() == "0")
-                    return;
+                while (true)
+                {
+                    AnsiConsole.MarkupLine("Введите начальную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
+                    var input = Console.ReadLine();
+                    if (input?.ToLower() == "0")
+                        return;
 
-                if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate))
-                    break;
+                    if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate))
+                        break;
 
-                AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
+                    AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
+                }
+
+                // Ввод конечной даты
+                while (true)
+                {
+                    AnsiConsole.MarkupLine("Введите конечную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
+                    var input = Console.ReadLine();
+                    if (input?.ToLower() == "0")
+                        return;
+
+                    if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate))
+                        break;
+
+                    AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
+                }
+            }
+            else
+            {
+                startDate = DateTime.MinValue;
+                endDate = DateTime.MaxValue;
             }
 
-            // Ввод конечной даты
-            while (true)
-            {
-                AnsiConsole.MarkupLine("Введите конечную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
-                var input = Console.ReadLine();
-                if (input?.ToLower() == "0")
-                    return;
 
-                if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate))
-                    break;
-
-                AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
-            }
             AnsiConsole.Clear();
             // Фильтрация логов по выбранному периоду
             var filteredLogs = logs
@@ -138,9 +152,9 @@ namespace ServiceLibrary
             // Добавление данных в диаграмму
             foreach (var group in logGroups)
             {
-                colorMixer = (colorMixer * group.Count) % 255; 
+                colorMixer = (colorMixer * group.Count) % 255;
                 chart.AddItem(group.Level, group.Count, colorMixer);
-                colorMixer *= 3; 
+                colorMixer *= 3;
             }
 
             // Отображение диаграммы
@@ -149,7 +163,7 @@ namespace ServiceLibrary
 
 
         // Метод для отображения календаря на все даты с записями
-        public static void ShowCalendar(List<Log> logs)
+        public static void Calendar(List<Log> logs)
         {
             if (logs.Count == 0)
             {
@@ -218,6 +232,39 @@ namespace ServiceLibrary
                 <= 20 => Color.Green4,
                 _ => Color.DarkOliveGreen1 // Более 20 записей
             };
+        }
+
+        public static async Task VisualizationMenu()
+        {
+            if (LogFilters._logs == null)
+            {
+                AnsiConsole.MarkupLine("[red]Сперва введите данные в программу.[/]");
+                return;
+            }
+            while (true)
+            {
+                var choice = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Выберите способ визуализации:")
+                        .AddChoices(["Таблицей", "Календарем", "Диаграммой", "Интерактивно", "Выход"]));
+                switch (choice)
+                {
+                    case "Таблицей":
+                        Table(LogFilters._logs);
+                        break;
+                    case "Календарем":
+                        Calendar(LogFilters._logs);
+                        break;
+                    case "Диаграммой":
+                        BreakdownChart(LogFilters._logs);
+                        AnsiConsole.MarkupLine("[dim gray]Нажмите Enter для выхода.[/]");
+                        Console.ReadLine();
+                        AnsiConsole.Clear();
+                        break;
+                    case "Выход":
+                        return;
+                }
+            }
         }
     }
 }
