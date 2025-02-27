@@ -15,7 +15,7 @@ public static class MenuHandler
         {
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("[italic]Добро пожаловать![/]")
+                    .Title("[italic slowblink]Анализатор логов[/]")
                     .AddChoices(new[] { "Загрузить данные", "Фильтрация данных", "Вывести логи", "Выход" }));
             switch (choice)
             {
@@ -48,7 +48,7 @@ public static class MenuHandler
         LogFilters._logs = await PathChecker.isCorrectTxt(path);
         if (LogFilters._logs.Count > 0)
         {
-            AnsiConsole.MarkupLine("[green]Данные успешно загружены.[/]");
+            AnsiConsole.MarkupLine("[darkorange3]Данные успешно загружены.[/]");
         }
         else
         {
