@@ -1,6 +1,8 @@
 ﻿using Logs;
+using ScottPlot;
 using Spectre.Console;
 using System.Globalization;
+using ScottPlot;
 
 namespace ServiceLibrary
 {
@@ -211,7 +213,7 @@ namespace ServiceLibrary
                         int logCount = day.Value;
 
                         // Определение цвета в зависимости от количества записей.
-                        Color color = GetColorForLogCount(logCount);
+                        Spectre.Console.Color color = GetColorForLogCount(logCount);
 
                         // Добавление события с настройкой стиля.
                         calendar.AddCalendarEvent(year, month, dayOfMonth)
@@ -231,21 +233,21 @@ namespace ServiceLibrary
         /// </summary>
         /// <param name="logCount">Количество логов в какой-то день</param>
         /// <returns></returns>
-        private static Color GetColorForLogCount(int logCount)
+        private static Spectre.Console.Color GetColorForLogCount(int logCount)
         {
-            if (logCount == 0) return Color.Default;
+            if (logCount == 0) return Spectre.Console.Color.Default;
 
             return logCount switch
             {
-                <= 5 => Color.Green1,
-                <= 10 => Color.Green3,
-                <= 20 => Color.Green4,
-                _ => Color.DarkOliveGreen1
+                <= 5 => Spectre.Console.Color.Green1,
+                <= 10 => Spectre.Console.Color.Green3,
+                <= 20 => Spectre.Console.Color.Green4,
+                _ => Spectre.Console.Color.DarkOliveGreen1
             };
         }
 
         /// <summary>
-        /// Метод, выводящий меню с выбором визулизации.
+        /// Метод, выводящий меню с выбором визуализации.
         /// </summary>
         public static void VisualizationMenu()
         {
@@ -259,7 +261,7 @@ namespace ServiceLibrary
                 var choice = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("Выберите способ визуализации:")
-                        .AddChoices(["Таблицей", "Календарем", "Диаграммой", "Выход"]));
+                        .AddChoices(["Таблицей", "Календарем", "Диаграммой", "Создать и экспортировать гистограмму", "Выход"]));
                 switch (choice)
                 {
                     case "Таблицей":
@@ -272,10 +274,53 @@ namespace ServiceLibrary
                         BreakdownChart(LogFilters._logs);
                         AnsiConsole.Clear();
                         break;
+                    case "Создать и экспортировать гистограмму":
+                        PlotLogsOverTime(LogFilters._logs);
+                        break;
                     case "Выход":
                         return;
                 }
             }
+        }
+
+        /// <summary>
+        /// Метод создания гистограммы.
+        /// </summary>
+        /// <param name="logs">Список логов, для которых формируется гистограмма.</param>
+        public static void PlotLogsOverTime(List<Log> logs)
+        {
+            if (logs.Count == 0)
+            {
+                AnsiConsole.WriteLine("Нет данных для построения графика.");
+                return;
+            }
+
+            // Группировка логов по дням.
+            var logsByDay = logs
+                .GroupBy(log => log.dateTime.Date) // Группируем по дате (без времени).
+                .OrderBy(group => group.Key)   // Сортируем по дате.
+                .ToList();
+            double[] dates = logsByDay.Select(group => group.Key.ToOADate()).ToArray(); // Даты в формате OLE (дней с 30го Декабря 1899).
+            double[] counts = logsByDay.Select(group => (double)group.Count()).ToArray(); // Количество записей.
+
+            var plt = new Plot();
+            var barPlot = plt.Add.Bars(dates, counts);
+            plt.Axes.DateTimeTicksBottom();
+            plt.XLabel("Дата");
+            plt.YLabel("Количество записей");
+            plt.Title("Количество записей логов по дням");
+            string outputPath = AnsiConsole.Ask<string>("Введите путь куда сохранить изображение с графиком: ");
+            if (!PathChecker.isCorrectPath(outputPath)) return;
+            string fileName = AnsiConsole.Ask<string>("Введите имя для файла изображения (без .png): ");
+            if (!PathChecker.ValidateFileName(fileName)) return;
+            /*
+             * Если путь введён в конце с символом, используемым
+             * для разделения элементов в пути, то удаляем его (чтобы
+             * путь был корректен и не состоял из двух подряд разделителей)
+             * и передаем "склеенный" корректный путь для создания файла.
+             */
+            plt.SavePng($"{(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.png", 1000, 1000);
+            Console.WriteLine($"График сохранён в файл: {(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.png");
         }
     }
 }

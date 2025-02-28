@@ -1,9 +1,6 @@
-﻿using Library;
+﻿using ServiceLibrary;
 using Logs;
-using ServiceLibrary;
 using Spectre.Console;
-using System.Diagnostics;
-using System.Text.Json;
 
 public static class MenuHandler
 {

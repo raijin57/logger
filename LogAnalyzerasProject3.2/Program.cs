@@ -1,4 +1,4 @@
-﻿using Library;
+﻿using ServiceLibrary;
 using Logs;
 using Spectre.Console;
 
