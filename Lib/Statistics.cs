@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ServiceLibrary
@@ -107,10 +108,11 @@ namespace ServiceLibrary
                 AnsiConsole.MarkupLine("[red]Введите корректное число[/]");
                 return;
             }
-            // Объединяем все сообщения в одну строку.
-            string allMessages = string.Join(" ", LogFilters._logs.Select(log => log.message));
+            // Объединяем все сообщения в одну строку, очищая от знаков препинания.
+            string allMessages = Regex.Replace(string.Join(" ", LogFilters._logs.Select(log => log.message)), @"[^\w\s]", "");
+            var stopWords = new HashSet<string> { "в", "к", "нa", "из", "от" };
             // Разделяем текст на слова и приводим их к нижнему регистру.
-            var words = allMessages.Split([' ', '\t', '\n', '\r'], StringSplitOptions.RemoveEmptyEntries).Select(word => word.ToLower());
+            var words = allMessages.Split([' ', '\t', '\n', '\r'], StringSplitOptions.RemoveEmptyEntries).Select(word => word.ToLower()).Where(word => !stopWords.Contains(word));
             var wordFrequency = new Dictionary<string, int>();
             foreach (var word in words)
             {

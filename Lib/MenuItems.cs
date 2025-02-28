@@ -39,6 +39,7 @@ public static class MenuHandler
                     Visualization.VisualizationMenu();
                     break;
                 case "Выход":
+                    AnsiConsole.Clear();
                     return;
             }
         }

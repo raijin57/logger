@@ -284,6 +284,7 @@ namespace ServiceLibrary
                         PlotLogsOverTime(LogFilters._logs);
                         break;
                     case "Выход":
+                        AnsiConsole.Clear();
                         return;
                 }
             }
