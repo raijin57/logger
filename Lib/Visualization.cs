@@ -102,10 +102,14 @@ namespace ServiceLibrary
                     AnsiConsole.MarkupLine("Введите начальную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
                     var input = Console.ReadLine();
                     if (input?.ToLower() == "0")
+                    {
                         return;
+                    }
 
                     if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate))
+                    {
                         break;
+                    }
                     AnsiConsole.Clear();
                     AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
                 }
@@ -116,10 +120,14 @@ namespace ServiceLibrary
                     AnsiConsole.MarkupLine("Введите конечную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
                     var input = Console.ReadLine();
                     if (input?.ToLower() == "0")
+                    {
                         return;
+                    }
 
                     if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate))
+                    {
                         break;
+                    }
                     AnsiConsole.Clear();
                     AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
                 }
