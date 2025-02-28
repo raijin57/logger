@@ -2,8 +2,6 @@
 using ScottPlot;
 using Spectre.Console;
 using System.Globalization;
-using ScottPlot;
-
 namespace ServiceLibrary
 {
     public static class Visualization

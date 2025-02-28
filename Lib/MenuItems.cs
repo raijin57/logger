@@ -15,12 +15,16 @@ public static class MenuHandler
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("[italic slowblink red]Анализатор логов[/]")
-                    .AddChoices(["Загрузить данные", "Фильтрация данных", "Визуализация", "Выход"]));
+                    .AddChoices(["Загрузить данные", "Экспортировать данные", "Фильтрация данных", "Визуализация", "Выход"]));
             switch (choice)
             {
                 case "Загрузить данные":
                     AnsiConsole.Clear();
                     await LoadData(); 
+                    break;
+                case "Экспортировать данные":
+                    AnsiConsole.Clear();
+                    TXTWriter.Write();
                     break;
                 case "Фильтрация данных":
                     AnsiConsole.Clear();
