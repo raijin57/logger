@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LogAnalyzerasProject3.2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9128a017545e0b928f0ea00f2d4af76c8ba9bf89")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+847375f0e8cd827771d50f678c1243453542c8c8")]
 [assembly: System.Reflection.AssemblyProductAttribute("LogAnalyzerasProject3.2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LogAnalyzerasProject3.2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

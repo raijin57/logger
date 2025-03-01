@@ -1,0 +1,166 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\ServiceLibrary.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\ServiceLibrary.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\ServiceLibrary.csproj",
+        "projectName": "ServiceLibrary",
+        "projectPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\ServiceLibrary.csproj",
+        "packagesPath": "C:\\Users\\Arsen\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Lib\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Arsen\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Logs\\Logs.csproj": {
+                "projectPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Logs\\Logs.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "ScottPlot": {
+              "target": "Package",
+              "version": "[5.0.54, )"
+            },
+            "Spectre.Console": {
+              "target": "Package",
+              "version": "[0.49.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Logs\\Logs.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Logs\\Logs.csproj",
+        "projectName": "Logs",
+        "projectPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Logs\\Logs.csproj",
+        "packagesPath": "C:\\Users\\Arsen\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Arsen\\source\\repos\\LogAnalyzerasProject3.2\\LogAnalyzerasProject3.2\\Logs\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Arsen\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "ScottPlot": {
+              "target": "Package",
+              "version": "[5.0.54, )"
+            },
+            "Spectre.Console": {
+              "target": "Package",
+              "version": "[0.49.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
