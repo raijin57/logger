@@ -90,10 +90,16 @@ namespace Logs
             {
                 filterDescriptions.Add(GetFilterDescription(filter));
             }
-            var filterToRemove = AnsiConsole.Prompt(
+            string filterToRemove = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("Выберите фильтр для удаления:")
-                    .AddChoices(filterDescriptions));
+                    .Title("Выберите фильтр для удаления или введите \"0\" для отмены:")
+                    .AddChoices(filterDescriptions)
+                    .AddChoices("Выход"));
+            if (filterToRemove == "Выход")
+            {
+                AnsiConsole.Clear();
+                return;
+            }
             var index = filterDescriptions.IndexOf(filterToRemove);
             filters.RemoveAt(index);
             AnsiConsole.MarkupLine("[green]Фильтр удалён.[/]");

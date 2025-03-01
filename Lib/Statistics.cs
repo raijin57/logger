@@ -26,7 +26,11 @@ namespace ServiceLibrary
             {
                 AnsiConsole.MarkupLine("Введите начальную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
                 var input = Console.ReadLine();
-                if (input?.ToLower() == "0") return;
+                if (input?.ToLower() == "0")
+                {
+                    AnsiConsole.Clear();
+                    return;
+                }
                 if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate)) break;
                 AnsiConsole.Clear();
                 AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
@@ -48,6 +52,9 @@ namespace ServiceLibrary
                 if (log.Timestamp >= startDate && log.Timestamp <= endDate && log.ImportanceLevel.ToUpper() == "ERROR") counter++;
             }
             AnsiConsole.MarkupLine($"[yellow]Количество ошибок (ERROR) за указанный временной диапазон: {counter}[/]");
+            AnsiConsole.MarkupLine("[dim grey]Нажмите Enter для выхода.[/]");
+            Console.ReadLine();
+            AnsiConsole.Clear();
         }
 
         /// <summary>
@@ -64,12 +71,15 @@ namespace ServiceLibrary
                 switch (choice)
                 {
                     case "Одновременные логи":
+                        AnsiConsole.Clear();
                         SameSecondAnomaly();
                         break;
                     case "Повторяющиеся сообщения":
+                        AnsiConsole.Clear();
                         SameMessageAnomaly();
                         break;
                     case "Долгое отсутствие логов":
+                        AnsiConsole.Clear();
                         LongTimeGapAnomaly();
                         break;
                     case "Выход":
@@ -90,7 +100,9 @@ namespace ServiceLibrary
             {
                 AnsiConsole.MarkupLine($"[yellow]Несколько логов за {group.Key}. Количество: {group.Count()}.[/]");
             }
-
+            AnsiConsole.MarkupLine("[dim grey]Нажмите Enter для выхода.[/]");
+            Console.ReadLine();
+            AnsiConsole.Clear();
         }
 
         public static void SameMessageAnomaly()
@@ -104,6 +116,9 @@ namespace ServiceLibrary
             {
                 AnsiConsole.MarkupLine($"[yellow]Повторяющееся сообщение: \"{group.Key}\". Количество повторений: {group.Count()}.[/]");
             }
+            AnsiConsole.MarkupLine("[dim grey]Нажмите Enter для выхода.[/]");
+            Console.ReadLine();
+            AnsiConsole.Clear();
         }
 
         public static void LongTimeGapAnomaly()
@@ -119,6 +134,9 @@ namespace ServiceLibrary
                     AnsiConsole.MarkupLine($"[yellow]Большой промежуток времени между логами. Длительность: {(int)timeGap.TotalMinutes} минут.[/]");
                 }
             }
+            AnsiConsole.MarkupLine("[dim grey]Нажмите Enter для выхода.[/]");
+            Console.ReadLine();
+            AnsiConsole.Clear();
         }
 
         /// <summary>
@@ -126,7 +144,12 @@ namespace ServiceLibrary
         /// </summary>
         public static void WordsCount()
         {
-            string n = AnsiConsole.Ask<string>("Введите число N: ");
+            string n = AnsiConsole.Ask<string>("Введите число N или \"0\" для отмены: ");
+            if (n == "0")
+            {
+                AnsiConsole.Clear();
+                return;
+            }
             if (!int.TryParse(n, out int N))
             {
                 AnsiConsole.MarkupLine("[red]Введите корректное число[/]");
@@ -161,6 +184,9 @@ namespace ServiceLibrary
             {
                 AnsiConsole.MarkupLine($"[yellow]{word.Key}: {word.Value}[/]");
             }
+            AnsiConsole.MarkupLine("[dim grey]Нажмите Enter для выхода.[/]");
+            Console.ReadLine();
+            AnsiConsole.Clear();
         }
 
         /// <summary>
@@ -168,6 +194,11 @@ namespace ServiceLibrary
         /// </summary>
         public static void StatisticsMenu()
         {
+            if (LogFilters._logs == null)
+            {
+                AnsiConsole.MarkupLine("[red]Сперва введите данные в программу.[/]");
+                return;
+            }
             while (true)
             {
                 var choice = AnsiConsole.Prompt(

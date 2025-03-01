@@ -21,8 +21,12 @@ namespace ServiceLibrary
                 AnsiConsole.MarkupLine("[red]Сперва введите данные в программу.[/]");
                 return;
             }
-            string outputPath = AnsiConsole.Ask<string>("Введите путь сохранения файла с логами (без имени файла и расширения): ");
-            if (!PathChecker.isCorrectPath(outputPath)) return;
+            string outputPath = AnsiConsole.Ask<string>("Введите путь сохранения файла с логами (без имени файла и расширения) или \"0\" для отмены: ");
+            if (!PathChecker.isCorrectPath(outputPath) || outputPath == "0")
+            {
+                AnsiConsole.Clear(); 
+                return;
+            }
             string fileName = AnsiConsole.Ask<string>("Введите имя файла (без расширения): ");
             if (!PathChecker.ValidateFileName(fileName)) return;
             try

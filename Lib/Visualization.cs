@@ -81,8 +81,13 @@ namespace ServiceLibrary
             string choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                 .Title("Вывести данные за всё время или за период?")
-                .AddChoices(["За всё время", "Выбрать период"]));
-            if (choice == "Выбрать период")
+                .AddChoices(["За всё время", "Выбрать период", "Выход"]));
+            if (choice == "Выход")
+            {
+                AnsiConsole.Clear();
+                return;
+            }
+            else if (choice == "Выбрать период")
             {
                 // Ввод начальной даты.
                 while (true)
@@ -124,13 +129,11 @@ namespace ServiceLibrary
             var filteredLogs = LogFilters._logs
                 .Where(LogFilters.FilterByDate(startDate, endDate))
                 .ToList();
-
             if (filteredLogs.Count == 0)
             {
                 AnsiConsole.MarkupLine("[red]Нет данных для отображения за выбранный период.[/]");
                 return;
             }
-
             // Группировка логов по уровням важности для дальнейшего вывода.
             var logGroups = filteredLogs
                 .GroupBy(log => log.ImportanceLevel)
@@ -310,7 +313,7 @@ namespace ServiceLibrary
                         AnsiConsole.Clear();
                         break;
                     case "Создать и экспортировать гистограмму":
-                        LogsPlotHystogram();
+                        LogsPlotHistogram();
                         break;
                     case "Выход":
                         AnsiConsole.Clear();
@@ -323,7 +326,7 @@ namespace ServiceLibrary
         /// Метод создания гистограммы.
         /// </summary>
         /// <param name="logs">Список логов, для которых формируется гистограмма.</param>
-        public static void LogsPlotHystogram()
+        public static void LogsPlotHistogram()
         {
             // Группировка логов по дням.
             var logsByDay = LogFilters._logs
@@ -334,15 +337,27 @@ namespace ServiceLibrary
             double[] counts = logsByDay.Select(group => (double)group.Count()).ToArray(); // Количество записей.
 
             var plt = new Plot();
+            // Добавляем данные в гистограмму.
             var barPlot = plt.Add.Bars(dates, counts);
             plt.Axes.DateTimeTicksBottom();
+            // Минимальное по оси Y - 0.
+            plt.Axes.Left.Min = 0;
+            // Отметки по оси Y только целые числа без отметок между целыми.
+            ScottPlot.TickGenerators.EvenlySpacedMinorTickGenerator minorTickGen = new(0);
+            plt.Axes.Left.TickGenerator = new ScottPlot.TickGenerators.NumericAutomatic
+            {
+                MinorTickGenerator = minorTickGen,
+                IntegerTicksOnly = true
+            };
             plt.XLabel("Дата");
             plt.YLabel("Количество записей");
             plt.Title("Количество записей логов по дням");
             string outputPath = AnsiConsole.Ask<string>("Введите путь куда сохранить изображение с графиком (без имени файла и расширения): ");
             if (!PathChecker.isCorrectPath(outputPath)) return;
+            AnsiConsole.Clear();
             string fileName = AnsiConsole.Ask<string>("Введите имя для файла изображения (без .png): ");
             if (!PathChecker.ValidateFileName(fileName)) return;
+            AnsiConsole.Clear();
 
             /*
              * Если путь введён в конце с символом, используемым
