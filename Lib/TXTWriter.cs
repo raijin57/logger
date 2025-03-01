@@ -16,7 +16,7 @@ namespace ServiceLibrary
         /// </summary>
         public static void Write()
         {
-            if (LogFilters._logs == null)
+            if (LogFilters._logs == null || LogFilters._logs.Count == 0)
             {
                 AnsiConsole.MarkupLine("[red]Сперва введите данные в программу.[/]");
                 return;

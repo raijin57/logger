@@ -52,24 +52,32 @@ namespace Logs
             // Ввод начальной даты.
             while (true)
             {
-                AnsiConsole.MarkupLine("Введите начальную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
+                AnsiConsole.MarkupLine("[dodgerblue3]Введите начальную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: [/]");
                 var input = Console.ReadLine();
-                if (input?.ToLower() == "0") return null;
+                if (input?.ToLower() == "0")
+                {
+                    AnsiConsole.Clear();
+                    return null;
+                }
                 if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate)) break;
                 AnsiConsole.Clear();
-                AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
+                AnsiConsole.MarkupLine("[red]Некорректная дата. Попробуйте снова.[/]");
             }
 
             // Ввод конечной даты.
             while (true)
             {
-                AnsiConsole.MarkupLine("Введите конечную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
+                AnsiConsole.MarkupLine("[dodgerblue3]Введите конечную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: [/]");
                 var input = Console.ReadLine();
-                if (input?.ToLower() == "0") return null;
+                if (input?.ToLower() == "0")
+                {
+                    AnsiConsole.Clear();
+                    return null;
+                }
 
                 if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate)) break;
                 AnsiConsole.Clear();
-                AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
+                AnsiConsole.MarkupLine("[red]Некорректная дата. Попробуйте снова.[/]");
             }
             return FilterByDate(startDate, endDate);
         }
@@ -195,7 +203,7 @@ namespace Logs
         /// <returns>Меню с возможностью настройки фильтров.</returns>
         public static void FilterMenu()
         {
-            if (_logs == null)
+            if (_logs == null || _logs.Count == 0)
             {
                 AnsiConsole.MarkupLine("[red]Сперва введите данные в программу.[/]");
                 return;
@@ -218,6 +226,7 @@ namespace Logs
                         RemoveFilter(filters);
                         break;
                     case "Применить фильтры":
+                        AnsiConsole.Clear();
                         ApplyFilters(_logs);
                         return;
                     case "[italic underline]Назад[/]":

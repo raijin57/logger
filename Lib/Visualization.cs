@@ -100,6 +100,7 @@ namespace ServiceLibrary
                     var input = Console.ReadLine();
                     if (input?.ToLower() == "0")
                     {
+                        AnsiConsole.Clear();
                         return;
                     }
 
@@ -116,7 +117,11 @@ namespace ServiceLibrary
                 {
                     AnsiConsole.MarkupLine("[dodgerblue2]Введите конечную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: [/]");
                     var input = Console.ReadLine();
-                    if (input?.ToLower() == "0") return;
+                    if (input?.ToLower() == "0")
+                    {
+                        AnsiConsole.Clear();
+                        return;
+                    }
                     if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate)) break;
                     AnsiConsole.Clear();
                     AnsiConsole.MarkupLine("[red]Некорректная дата. Попробуйте снова.[/]");
@@ -293,7 +298,7 @@ namespace ServiceLibrary
         /// </summary>
         public static void VisualizationMenu()
         {
-            if (LogFilters._logs == null)
+            if (LogFilters._logs == null || LogFilters._logs.Count == 0)
             {
                 AnsiConsole.MarkupLine("[red]Сперва введите данные в программу.[/]");
                 return;
@@ -379,8 +384,16 @@ namespace ServiceLibrary
              * путь был корректен и не состоял из двух подряд разделителей)
              * и передаем "склеенный" корректный путь для создания файла.
              */
-
-            plt.SavePng($"{(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.png", 1000, 1000);
+            try
+            {
+                plt.SavePng($"{(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.png", 1000, 1000);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                AnsiConsole.Clear();
+                AnsiConsole.MarkupLine("[red]Доступ к директории запрещён.[/]");
+                return;
+            }
             AnsiConsole.MarkupLine($"[dodgerblue2]График сохранён в файл: {(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.png[/]");
         }
     }
