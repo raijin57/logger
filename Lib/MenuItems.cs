@@ -14,17 +14,14 @@ public static class MenuHandler
         {
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("[italic slowblink red]Анализатор логов[/]")
-                    .AddChoices(["Загрузить данные", "Экспортировать данные", "Фильтрация данных", "Расширенная статистика", "Визуализация", "Выход"]));
+                    .Title("[bold invert]Анализатор логов[/]")
+                    .AddChoices(["Загрузить данные", "Экспортировать данные", "Фильтрация данных", "Расширенная статистика", "Визуализация", "[italic underline]Выход из программы[/]"])
+                    .HighlightStyle(Color.DodgerBlue1));
             switch (choice)
             {
                 case "Загрузить данные":
                     AnsiConsole.Clear();
                     await LoadData();
-                    // Останавливаем сервер, если он был запущен до этого (например, если загрузили новый файл, не завершая программу).
-                    HTTPServer.Stop();
-                    // Запуск HTTP-сервера после прочтения файла.
-                    HTTPServer.Start();
                     break;
                 case "Экспортировать данные":
                     AnsiConsole.Clear();
@@ -42,7 +39,7 @@ public static class MenuHandler
                     AnsiConsole.Clear();
                     Visualization.VisualizationMenu();
                     break;
-                case "Выход":
+                case "[italic underline]Выход из программы[/]":
                     AnsiConsole.Clear();
                     return;
             }
@@ -55,7 +52,7 @@ public static class MenuHandler
     /// <returns>Список с прочитанными логами.</returns>
     private static async Task LoadData()
     {
-        var path = AnsiConsole.Ask<string>("Введите путь к файлу или \"0\" для отмены:");
+        var path = AnsiConsole.Ask<string>("[dodgerblue2]Введите путь к файлу или \"0\" для отмены: [/]");
         AnsiConsole.Clear();
         if (path == "0") return;
         /*
@@ -66,7 +63,11 @@ public static class MenuHandler
         LogFilters._logs = await PathChecker.isCorrectTxt(path);
         if (LogFilters._logs.Count > 0)
         {
-            AnsiConsole.MarkupLine("[dodgerblue3]Данные успешно загружены.[/]");
+            AnsiConsole.MarkupLine("[dodgerblue2]Данные успешно загружены.[/]");
+            // Останавливаем сервер, если он был запущен до этого (например, если загрузили новый файл, не завершая программу).
+            HTTPServer.Stop();
+            // Запуск HTTP-сервера после прочтения файла.
+            HTTPServer.Start();
         }
         else
         {

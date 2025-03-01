@@ -59,7 +59,7 @@ namespace Logs
             {
                 AnsiConsole.MarkupLine($"[red]Произошла ошибка при чтении файла: {ex.Message}[/]");
             }
-            AnsiConsole.MarkupLine($"[white]Некорректных строк (ошибка при форматировании), которые были пропущены: {skippedCounter}[/]");
+            AnsiConsole.MarkupLine($"Некорректных строк [red](ошибка при форматировании)[/], которые были пропущены: [red]{skippedCounter}[/]");
             return logs;
         }
     }

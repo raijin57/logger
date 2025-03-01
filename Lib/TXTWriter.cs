@@ -21,14 +21,18 @@ namespace ServiceLibrary
                 AnsiConsole.MarkupLine("[red]Сперва введите данные в программу.[/]");
                 return;
             }
-            string outputPath = AnsiConsole.Ask<string>("Введите путь сохранения файла с логами (без имени файла и расширения) или \"0\" для отмены: ");
+            string outputPath = AnsiConsole.Ask<string>("[dodgerblue2]Введите путь сохранения файла с логами (без имени файла и расширения) или \"0\" для отмены: [/]");
             if (!PathChecker.isCorrectPath(outputPath) || outputPath == "0")
             {
                 AnsiConsole.Clear(); 
                 return;
             }
-            string fileName = AnsiConsole.Ask<string>("Введите имя файла (без расширения): ");
-            if (!PathChecker.ValidateFileName(fileName)) return;
+            string fileName = AnsiConsole.Ask<string>("[dodgerblue2]Введите имя файла (без расширения): [/]");
+            if (!PathChecker.ValidateFileName(fileName))
+            {
+                AnsiConsole.Clear();
+                return;
+            }
             try
             {
                 /*
@@ -37,6 +41,7 @@ namespace ServiceLibrary
                 * путь был корректен и не состоял из двух подряд разделителей)
                 * и передаем "склеенный" корректный путь для создания файла.
                 */
+
                 // Аргумент false означает что будем перезаписывать уже существующий файл.
                 using (StreamWriter writer = new StreamWriter($"{(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.txt", false))
                 {
@@ -45,7 +50,7 @@ namespace ServiceLibrary
                         writer.WriteLine(line); 
                     }
                 }
-                AnsiConsole.MarkupLine($"[green]Логи были сохранены в {(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.txt[/]");
+                AnsiConsole.MarkupLine($"[dodgerblue2]Логи были сохранены в {(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.txt[/]");
             }
             catch
             {

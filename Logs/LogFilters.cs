@@ -92,10 +92,11 @@ namespace Logs
             }
             string filterToRemove = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("Выберите фильтр для удаления или введите \"0\" для отмены:")
+                    .Title("[invert]Выберите фильтр для удаления или введите \"0\" для отмены:[/]")
                     .AddChoices(filterDescriptions)
-                    .AddChoices("Выход"));
-            if (filterToRemove == "Выход")
+                    .AddChoices("[italic underline]Выход[/]")
+                    .HighlightStyle(Color.Orange1));
+            if (filterToRemove == "[italic underline]Выход[/]")
             {
                 AnsiConsole.Clear();
                 return;
@@ -129,8 +130,9 @@ namespace Logs
         {
             var filterType = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("Выберите тип фильтра:")
-                    .AddChoices(new[] { "По дате", "По уровню важности", "По ключевому слову", "Назад" }));
+                    .Title("[invert]Выберите тип фильтра:[/]")
+                    .AddChoices(new[] { "По дате", "По уровню важности", "По ключевому слову", "[italic underline]Назад[/]" })
+                    .HighlightStyle(Color.Orange1));
 
             switch (filterType)
             {
@@ -157,7 +159,7 @@ namespace Logs
                     AnsiConsole.Clear();
                     AnsiConsole.MarkupLine("[green]Фильтр по ключевому слову добавлен.[/]");
                     break;
-                case "Назад":
+                case "[italic underline]Назад[/]":
                     AnsiConsole.Clear();
                     return;
             }
@@ -201,8 +203,9 @@ namespace Logs
             {
                 var choice = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
-                        .Title("Меню фильтрации:")
-                        .AddChoices(["Добавить фильтр", "Удалить фильтр", "Применить фильтры", "Назад"]));
+                        .Title("[invert]Меню фильтрации:[/]")
+                        .AddChoices(["Добавить фильтр", "Удалить фильтр", "Применить фильтры", "[italic underline]Назад[/]"])
+                        .HighlightStyle(Color.Orange1));
                 switch (choice)
                 {
                     case "Добавить фильтр":
@@ -216,7 +219,7 @@ namespace Logs
                     case "Применить фильтры":
                         ApplyFilters(_logs);
                         return;
-                    case "Назад":
+                    case "[italic underline]Назад[/]":
                         return;
                 }
             }

@@ -24,7 +24,7 @@ namespace ServiceLibrary
             // Ввод начальной даты.
             while (true)
             {
-                AnsiConsole.MarkupLine("Введите начальную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
+                AnsiConsole.MarkupLine("[dodgerblue2]Введите начальную дату (гггг-мм-дд чч:мм:сс) или \"0\" для отмены: [/]");
                 var input = Console.ReadLine();
                 if (input?.ToLower() == "0")
                 {
@@ -33,18 +33,22 @@ namespace ServiceLibrary
                 }
                 if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate)) break;
                 AnsiConsole.Clear();
-                AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
+                AnsiConsole.MarkupLine("[red]Некорректная дата. Попробуйте снова.[/]");
             }
 
             // Ввод конечной даты
             while (true)
             {
-                AnsiConsole.MarkupLine("Введите конечную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
+                AnsiConsole.MarkupLine("[dodgerblue2]Введите конечную дату (гггг-мм-дд чч:мм:сс) или \"0\" для отмены: [/]");
                 var input = Console.ReadLine();
-                if (input?.ToLower() == "0") return;
+                if (input?.ToLower() == "0")
+                {
+                    AnsiConsole.Clear();
+                    return; 
+                }
                 if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate)) break;
                 AnsiConsole.Clear();
-                AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
+                AnsiConsole.MarkupLine("[red]Некорректная дата. Попробуйте снова.[/]");
             }
             foreach (Log log in LogFilters._logs)
             {
@@ -66,8 +70,9 @@ namespace ServiceLibrary
             {
                 var choice = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
-                        .Title("Меню поиска аномалий:")
-                        .AddChoices(["Одновременные логи", "Повторяющиеся сообщения", "Долгое отсутствие логов", "Выход"]));
+                        .Title("[invert]Меню поиска аномалий:[/]")
+                        .AddChoices(["Одновременные логи", "Повторяющиеся сообщения", "Долгое отсутствие логов", "[italic underline]Назад[/]"])
+                        .HighlightStyle(Color.DodgerBlue1));
                 switch (choice)
                 {
                     case "Одновременные логи":
@@ -82,7 +87,7 @@ namespace ServiceLibrary
                         AnsiConsole.Clear();
                         LongTimeGapAnomaly();
                         break;
-                    case "Выход":
+                    case "[italic underline]Назад[/]":
                         AnsiConsole.Clear();
                         return;
                 }
@@ -144,7 +149,7 @@ namespace ServiceLibrary
         /// </summary>
         public static void WordsCount()
         {
-            string n = AnsiConsole.Ask<string>("Введите число N или \"0\" для отмены: ");
+            string n = AnsiConsole.Ask<string>("[dodgerblue2]Введите число N или \"0\" для отмены: [/]");
             if (n == "0")
             {
                 AnsiConsole.Clear();
@@ -203,8 +208,9 @@ namespace ServiceLibrary
             {
                 var choice = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
-                        .Title("Расширенная статистика:")
-                        .AddChoices(["Количество ошибок за промежуток времени", "Поиск аномалий", "N самых часто встречающихся слов", "Выход"]));
+                        .Title("[invert]Расширенная статистика:[/]")
+                        .AddChoices(["Количество ошибок за промежуток времени", "Поиск аномалий", "N самых часто встречающихся слов", "[italic underline]Назад[/]"])
+                        .HighlightStyle(Color.DodgerBlue1));
                 switch (choice)
                 {
                     case "Количество ошибок за промежуток времени":
@@ -219,7 +225,7 @@ namespace ServiceLibrary
                         AnsiConsole.Clear();
                         WordsCount();
                         break;
-                    case "Выход":
+                    case "[italic underline]Назад[/]":
                         AnsiConsole.Clear();
                         return;
                 }

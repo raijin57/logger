@@ -41,7 +41,6 @@ namespace ServiceLibrary
             catch (Exception ex)
             {
                 AnsiConsole.Clear();
-                AnsiConsole.MarkupLine($"[red]{ex.Message}[/]");
                 return new List<Log>();
             }
         }

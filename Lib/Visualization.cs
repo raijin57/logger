@@ -33,11 +33,12 @@ namespace ServiceLibrary
                     table.AddRow(log.Timestamp.ToString(), log.ImportanceLevel, log.Message);
                 }
                 AnsiConsole.Write(table);
-                AnsiConsole.MarkupLine($"[dodgerblue3]Страница {page + 1} из {GetTotalTablePages(LogFilters._logs.Count)}[/]");
+                AnsiConsole.MarkupLine($"[dodgerblue2]Страница {page + 1} из {GetTotalTablePages(LogFilters._logs.Count)}[/]");
                 var choice = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("Выберите действие:")
-                        .AddChoices(["Следующая страница", "Предыдущая страница", "Выход"]));
+                        .AddChoices(["Следующая страница", "Предыдущая страница", "Выход"])
+                        .HighlightStyle(Spectre.Console.Color.DodgerBlue1));
                 switch (choice)
                 {
                     case "Следующая страница":
@@ -80,9 +81,10 @@ namespace ServiceLibrary
             DateTime endDate;
             string choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                .Title("Вывести данные за всё время или за период?")
-                .AddChoices(["За всё время", "Выбрать период", "Выход"]));
-            if (choice == "Выход")
+                .Title("[invert]Вывести данные за всё время или за период?[/]")
+                .AddChoices(["За всё время", "Выбрать период", "[italic underline]Назад[/]"])
+                 .HighlightStyle(Spectre.Console.Color.DodgerBlue1));
+            if (choice == "[italic underline]Назад[/]")
             {
                 AnsiConsole.Clear();
                 return;
@@ -298,24 +300,28 @@ namespace ServiceLibrary
             {
                 var choice = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
-                        .Title("Выберите способ визуализации:")
-                        .AddChoices(["Таблицей", "Календарем", "Диаграммой", "Создать и экспортировать гистограмму", "Выход"]));
+                        .Title("[invert]Выберите способ визуализации:[/]")
+                        .AddChoices(["Таблицей", "Календарем", "Диаграммой", "Создать и экспортировать гистограмму", "[italic underline]Назад[/]"])
+                        .HighlightStyle(Spectre.Console.Color.DodgerBlue1));
                 switch (choice)
                 {
                     case "Таблицей":
+                        AnsiConsole.Clear();
                         TableVisualization();
                         break;
                     case "Календарем":
+                        AnsiConsole.Clear();
                         CalendarVisualization();
                         break;
                     case "Диаграммой":
-                        BreakdownChartVisualization();
                         AnsiConsole.Clear();
+                        BreakdownChartVisualization();
                         break;
                     case "Создать и экспортировать гистограмму":
+                        AnsiConsole.Clear();
                         LogsPlotHistogram();
                         break;
-                    case "Выход":
+                    case "[italic underline]Назад[/]":
                         AnsiConsole.Clear();
                         return;
                 }
@@ -352,11 +358,19 @@ namespace ServiceLibrary
             plt.XLabel("Дата");
             plt.YLabel("Количество записей");
             plt.Title("Количество записей логов по дням");
-            string outputPath = AnsiConsole.Ask<string>("Введите путь куда сохранить изображение с графиком (без имени файла и расширения): ");
-            if (!PathChecker.isCorrectPath(outputPath)) return;
+            string outputPath = AnsiConsole.Ask<string>("[dodgerblue2]Введите путь куда сохранить изображение с графиком (без имени файла и расширения) или \"0\" для отмены: [/]");
+            if (!PathChecker.isCorrectPath(outputPath) || outputPath == "0")
+            {
+                AnsiConsole.Clear();
+                return;
+            }
             AnsiConsole.Clear();
-            string fileName = AnsiConsole.Ask<string>("Введите имя для файла изображения (без .png): ");
-            if (!PathChecker.ValidateFileName(fileName)) return;
+            string fileName = AnsiConsole.Ask<string>("[dodgerblue2]Введите имя для файла изображения (без .png) или \"0\" дл отмены: [/]");
+            if (!PathChecker.ValidateFileName(fileName) || fileName == "0")
+            {
+                AnsiConsole.Clear();
+                return;
+            }
             AnsiConsole.Clear();
 
             /*
@@ -367,7 +381,7 @@ namespace ServiceLibrary
              */
 
             plt.SavePng($"{(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.png", 1000, 1000);
-            Console.WriteLine($"График сохранён в файл: {(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.png");
+            Console.WriteLine($"[dodgerblue2]График сохранён в файл: {(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.png[/]");
         }
     }
 }
