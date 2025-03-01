@@ -22,9 +22,9 @@ namespace Logs
         /// <param name="startDate">Начальная дата диапазона.</param>
         /// <param name="endDate">Конечная дата диапазона.</param>
         /// <returns>Метод-фильтр для сортировки.</returns>
-        internal static Func<Log, bool> FilterByDate(DateTime startDate, DateTime endDate)
+        public static Func<Log, bool> FilterByDate(DateTime startDate, DateTime endDate)
         {
-            return log => log.dateTime >= startDate && log.dateTime <= endDate;
+            return log => log.Timestamp >= startDate && log.Timestamp <= endDate;
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Logs
         /// <returns>Метод-фильтр для сортировки.</returns>
         public static Func<Log, bool> FilterByLevel(string level)
         {
-            return log => log.level.Equals(level, StringComparison.OrdinalIgnoreCase);
+            return log => log.ImportanceLevel.Equals(level, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Logs
         /// <returns>Метод-фильтр для сортировки.</returns>
         public static Func<Log, bool> FilterByMessage(string keyword)
         {
-            return log => log.message.Contains(keyword, StringComparison.OrdinalIgnoreCase);
+            return log => log.Message.Contains(keyword, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>

@@ -36,7 +36,7 @@ namespace ServiceLibrary
                 table.AddColumn("Сообщение");
                 foreach (var log in pageLogs)
                 {
-                    table.AddRow(log.dateTime.ToString(), log.level, log.message);
+                    table.AddRow(log.Timestamp.ToString(), log.ImportanceLevel, log.Message);
                 }
                 AnsiConsole.Write(table);
                 AnsiConsole.MarkupLine($"[dodgerblue3]Страница {page + 1} из {GetTotalPages(logs.Count)}[/]");
@@ -143,7 +143,7 @@ namespace ServiceLibrary
             AnsiConsole.Clear();
             // Фильтрация логов, с выбором попавших в диапазон.
             var filteredLogs = logs
-                .Where(log => log.dateTime >= startDate && log.dateTime <= endDate)
+                .Where(log => log.Timestamp >= startDate && log.Timestamp <= endDate)
                 .ToList();
 
             if (filteredLogs.Count == 0)
@@ -154,7 +154,7 @@ namespace ServiceLibrary
 
             // Группировка логов по уровням важности для дальнейшего вывода.
             var logGroups = filteredLogs
-                .GroupBy(log => log.level)
+                .GroupBy(log => log.ImportanceLevel)
                 .Select(group => new
                 {
                     Level = group.Key,
@@ -194,12 +194,12 @@ namespace ServiceLibrary
             }
 
             // Находим минимальную и максимальную даты.
-            var minDate = logs.Min(log => log.dateTime);
-            var maxDate = logs.Max(log => log.dateTime);
+            var minDate = logs.Min(log => log.Timestamp);
+            var maxDate = logs.Max(log => log.Timestamp);
 
             // Группировка логов по дням.
             var logsByDay = logs
-                .GroupBy(log => log.dateTime.Date)
+                .GroupBy(log => log.Timestamp.Date)
                 .ToDictionary(group => group.Key, group => group.Count());
 
             // Отображение календарей для каждого месяца в диапазоне.
@@ -304,7 +304,7 @@ namespace ServiceLibrary
 
             // Группировка логов по дням.
             var logsByDay = logs
-                .GroupBy(log => log.dateTime.Date) // Группируем по дате (без времени).
+                .GroupBy(log => log.Timestamp.Date) // Группируем по дате (без времени).
                 .OrderBy(group => group.Key)   // Сортируем по дате.
                 .ToList();
             double[] dates = logsByDay.Select(group => group.Key.ToOADate()).ToArray(); // Даты в формате OLE (дней с 30го Декабря 1899).

@@ -58,7 +58,7 @@ namespace ServiceLibrary
             }
             foreach (Log log in LogFilters._logs)
             {
-                if (log.dateTime >= startDate && log.dateTime <= endDate && log.level.ToUpper() == "ERROR") counter++;
+                if (log.Timestamp >= startDate && log.Timestamp <= endDate && log.ImportanceLevel.ToUpper() == "ERROR") counter++;
             }
             AnsiConsole.MarkupLine($"[yellow]Количество ошибок (ERROR) за указанный временной диапазон: {counter}[/]");
         }
@@ -70,7 +70,7 @@ namespace ServiceLibrary
         {
             // Ищем, написано ли несколько логов в одну и ту же секунду.
             var logsPerSecond = LogFilters._logs
-            .GroupBy(log => log.dateTime) 
+            .GroupBy(log => log.Timestamp) 
             .Where(group => group.Count() > 1);
             
             foreach (var group in logsPerSecond)
@@ -80,7 +80,7 @@ namespace ServiceLibrary
 
             // Ищем, повторялись ли сообщения в логах.
             var repeatedMessages = LogFilters._logs
-            .GroupBy(log => log.message)
+            .GroupBy(log => log.Message)
             .Where(group => group.Count() > 1);
 
             foreach (var group in repeatedMessages)
@@ -89,10 +89,10 @@ namespace ServiceLibrary
             }
 
             // Ищем, давно ли у нас нет логов.
-            var sortedLogs = LogFilters._logs.OrderBy(log => log.dateTime).ToList();
+            var sortedLogs = LogFilters._logs.OrderBy(log => log.Timestamp).ToList();
             for (int i = 1; i < sortedLogs.Count; i++)
             {
-                var timeGap = sortedLogs[i].dateTime - sortedLogs[i - 1].dateTime;
+                var timeGap = sortedLogs[i].Timestamp - sortedLogs[i - 1].Timestamp;
                 if (timeGap.TotalMinutes >= 52) // Порог: более 1 минуты между логами
                 {
                     AnsiConsole.WriteLine($"[yellow]Аномалия: большой промежуток времени между логами. Длительность: {timeGap.TotalMinutes} минут.[/]");
@@ -100,6 +100,9 @@ namespace ServiceLibrary
             }
         }
 
+        /// <summary>
+        /// Метод подсчета самых часто встречающихся слов.
+        /// </summary>
         public static void WordsCounter()
         {
             string n = AnsiConsole.Ask<string>("Введите число N: ");
@@ -109,7 +112,7 @@ namespace ServiceLibrary
                 return;
             }
             // Объединяем все сообщения в одну строку, очищая от знаков препинания.
-            string allMessages = Regex.Replace(string.Join(" ", LogFilters._logs.Select(log => log.message)), @"[^\w\s]", "");
+            string allMessages = Regex.Replace(string.Join(" ", LogFilters._logs.Select(log => log.Message)), @"[^\w\s]", "");
             var stopWords = new HashSet<string> { "в", "к", "нa", "из", "от" };
             // Разделяем текст на слова и приводим их к нижнему регистру.
             var words = allMessages.Split([' ', '\t', '\n', '\r'], StringSplitOptions.RemoveEmptyEntries).Select(word => word.ToLower()).Where(word => !stopWords.Contains(word));
@@ -168,6 +171,28 @@ namespace ServiceLibrary
                         return;
                 }
             }
+        }
+        /// <summary>
+        /// Метод, для получения статистики по логам, нужно для GET запроса /logs/statistics.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public static object GETStatistics(string from, string to, List<Log> filteredLogs)
+        {
+            var logLevelsCount = new Dictionary<string, int>();
+            // Группируем логи по уровням важности и подсчитываем количество.
+            foreach (var level in new[] { "INFO", "WARNING", "ERROR" })
+            {
+                var count = filteredLogs.Count(LogFilters.FilterByLevel(level));
+                logLevelsCount[level] = count;
+            }
+            // Сразу выведем оба пункта нужной статистики: и общее количество лог-сообщений и словарь с уровнями важности и их количеством.
+            return new
+            {
+                totalMessages = filteredLogs.Count,
+                logLevelsCount
+            };
         }
     }
 }
