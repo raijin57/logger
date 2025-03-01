@@ -2,7 +2,7 @@
 using Logs;
 using Spectre.Console;
 
-namespace Lib
+namespace ServiceLibrary
 {
     class Program
     {

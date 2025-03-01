@@ -1,21 +1,15 @@
 ﻿using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Reflection.Metadata.BlobBuilder;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Logs
 {
     public static class LogFilters
     {
+        // Список, где будут храниться все прочитанные данные из файла.
         public static List<Log> _logs;
-
+        // Список, сохраняющий все выбранные фильтры.
         public static List<Func<Log, bool>> filters = new List<Func<Log, bool>>();
-
         /// <summary>
         /// Метод-фильтр для сортировки по диапазону дат.
         /// </summary>
@@ -55,7 +49,7 @@ namespace Logs
         {
             DateTime startDate, endDate;
 
-            // Ввод начальной даты
+            // Ввод начальной даты.
             while (true)
             {
                 AnsiConsole.MarkupLine("Введите начальную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
@@ -69,7 +63,7 @@ namespace Logs
                 AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
             }
 
-            // Ввод конечной даты
+            // Ввод конечной даты.
             while (true)
             {
                 AnsiConsole.MarkupLine("Введите конечную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
@@ -96,8 +90,8 @@ namespace Logs
                 AnsiConsole.MarkupLine("[red]Нет фильтров для удаления.[/]");
                 return;
             }
-
-            var filterDescriptions = new List<string>();
+            // Список, с описаниями уже созданных фильтров (чтобы понимать какой удаляешь).
+            List<string> filterDescriptions = new List<string>();
             foreach (var filter in filters)
             {
                 filterDescriptions.Add(GetFilterDescription(filter));
@@ -121,7 +115,7 @@ namespace Logs
         public static string GetFilterDescription(Func<Log, bool> filter)
         {
             if (filter.Method == FilterByDate(default, default).Method)
-                return "Фильтр по дате";
+                return $"Фильтр по дате";
             if (filter.Method == FilterByLevel(default).Method)
                 return "Фильтр по уровню важности";
             if (filter.Method == FilterByMessage(default).Method)

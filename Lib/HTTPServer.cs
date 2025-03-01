@@ -10,7 +10,7 @@ namespace ServiceLibrary
     /// <summary>
     /// Класс, содержащий всю логику http сервера (REST API).
     /// </summary>
-    public static class SimpleHttpServer
+    public static class HTTPServer
     {
         // Создаём экземпляр HttpListener, который будет принимать входящие http запросы.
         private static HttpListener _listener;
@@ -65,7 +65,7 @@ namespace ServiceLibrary
         /// <summary>
         /// Метод, выполняющий полученный запрос.
         /// </summary>
-        /// <param name="context">Параметры запрооса</param>
+        /// <param name="context">Параметры запроса.</param>
         private static void ProcessRequest(HttpListenerContext context)
         {
             try
@@ -77,19 +77,16 @@ namespace ServiceLibrary
                 // Происходит какой-то баг с дублированием пунктов меню, кажется буфер не успевает, поэтому ещё раз пришлось очистить.
                 AnsiConsole.Clear();
                 AnsiConsole.MarkupLine($"[dim]Получен запрос: {request.HttpMethod} {request.Url}\n[/]");
-
                 // Обработка GET /logs.
                 if (request.HttpMethod == "GET" && request.Url.AbsolutePath == "/logs")
                 {
                     var from = request.QueryString["from"];
                     var to = request.QueryString["to"];
-
                     // Проверяем, указаны ли параметры from и to.
                     if (!string.IsNullOrEmpty(from) && DateTime.TryParse(from, out _) && !string.IsNullOrEmpty(to) && DateTime.TryParse(to, out _))
                     {
                         // Применяем фильтр по дате
                         var filteredLogs = FilterLogs(from, to);
-
                         // Формируем ответ в JSON.
                         var jsonResponse = JsonConvert.SerializeObject(filteredLogs);
                         response.ContentType = "application/json";
@@ -124,7 +121,6 @@ namespace ServiceLibrary
                     // Обработка GET /logs/statistics.
                     var from = request.QueryString["from"];
                     var to = request.QueryString["to"];
-
                     // Фильтруем логи по дате.
                     List<Log> filteredLogs = FilterLogs(from, to);
                     // Получаем статистику.

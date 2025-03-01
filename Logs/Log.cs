@@ -1,11 +1,11 @@
 ﻿namespace Logs
 {
     /// <summary>
-    /// Структура, представляюшая один лог.
+    /// Структура, представляющая один лог.
     /// </summary>
     public struct Log
     {
-        public DateTime Timestamp { get; set; }
+        public DateTime Timestamp;
         public string ImportanceLevel;
         public string Message;
 
@@ -17,7 +17,7 @@
         }
         public override string ToString()
         {
-            return $"[{Timestamp}] [{ImportanceLevel}] [{Message}]";
+            return $"[{Timestamp}] [{ImportanceLevel}] {Message}";
         }
     }
 }

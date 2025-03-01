@@ -22,9 +22,9 @@ public static class MenuHandler
                     AnsiConsole.Clear();
                     await LoadData();
                     // Останавливаем сервер, если он был запущен до этого (например, если загрузили новый файл, не завершая программу).
-                    SimpleHttpServer.Stop();
+                    HTTPServer.Stop();
                     // Запуск HTTP-сервера
-                    SimpleHttpServer.Start();
+                    HTTPServer.Start();
                     break;
                 case "Экспортировать данные":
                     AnsiConsole.Clear();
