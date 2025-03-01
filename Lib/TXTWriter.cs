@@ -22,15 +22,13 @@ namespace ServiceLibrary
                 return;
             }
             string outputPath = AnsiConsole.Ask<string>("[dodgerblue2]Введите путь сохранения файла с логами (без имени файла и расширения) или \"0\" для отмены: [/]");
-            if (!PathChecker.isCorrectPath(outputPath) || outputPath == "0")
+            if (!Checker.isCorrectPath(outputPath) || outputPath == "0")
             {
-                AnsiConsole.Clear(); 
                 return;
             }
             string fileName = AnsiConsole.Ask<string>("[dodgerblue2]Введите имя файла (без расширения): [/]");
-            if (!PathChecker.ValidateFileName(fileName))
+            if (!Checker.ValidateFileName(fileName))
             {
-                AnsiConsole.Clear();
                 return;
             }
             try
@@ -54,6 +52,7 @@ namespace ServiceLibrary
             }
             catch
             {
+                AnsiConsole.Clear();
                 AnsiConsole.MarkupLine("[red]Путь к файлу оказался неправильным.[/]");
                 return;
             }

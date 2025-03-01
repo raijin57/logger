@@ -79,7 +79,7 @@ namespace Logs
         /// </summary>
         private static void RemoveFilter(List<Func<Log, bool>> filters)
         {
-            if (filters.Count == 0)
+            if (filters == null || filters.Count == 0)
             {
                 AnsiConsole.MarkupLine("[red]Нет фильтров для удаления.[/]");
                 return;
@@ -95,7 +95,7 @@ namespace Logs
                     .Title("[invert]Выберите фильтр для удаления или введите \"0\" для отмены:[/]")
                     .AddChoices(filterDescriptions)
                     .AddChoices("[italic underline]Выход[/]")
-                    .HighlightStyle(Color.Orange1));
+                    .HighlightStyle(Color.DodgerBlue1));
             if (filterToRemove == "[italic underline]Выход[/]")
             {
                 AnsiConsole.Clear();
@@ -132,7 +132,7 @@ namespace Logs
                 new SelectionPrompt<string>()
                     .Title("[invert]Выберите тип фильтра:[/]")
                     .AddChoices(new[] { "По дате", "По уровню важности", "По ключевому слову", "[italic underline]Назад[/]" })
-                    .HighlightStyle(Color.Orange1));
+                    .HighlightStyle(Color.DodgerBlue1));
 
             switch (filterType)
             {
@@ -182,6 +182,7 @@ namespace Logs
                 // Удаляем элементы, которые НЕ удовлетворяют фильтру.
                 logs.RemoveAll(log => !filter(log)); 
             }
+            filters = null;
             AnsiConsole.Clear();
             AnsiConsole.MarkupLine("[dodgerblue3]Фильтры были применены.[/]");
             return;
@@ -205,7 +206,7 @@ namespace Logs
                     new SelectionPrompt<string>()
                         .Title("[invert]Меню фильтрации:[/]")
                         .AddChoices(["Добавить фильтр", "Удалить фильтр", "Применить фильтры", "[italic underline]Назад[/]"])
-                        .HighlightStyle(Color.Orange1));
+                        .HighlightStyle(Color.DodgerBlue1));
                 switch (choice)
                 {
                     case "Добавить фильтр":
@@ -220,6 +221,7 @@ namespace Logs
                         ApplyFilters(_logs);
                         return;
                     case "[italic underline]Назад[/]":
+                        AnsiConsole.Clear();
                         return;
                 }
             }

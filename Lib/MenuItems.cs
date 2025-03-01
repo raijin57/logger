@@ -60,7 +60,16 @@ public static class MenuHandler
          * (Зависимости Logs от ServiceLibrary быть не может, так как ServiceLibrary нужно знать о
          * структуре Log и мы не можем сделать петлю в зависимостях).
          */
-        LogFilters._logs = await PathChecker.isCorrectTxt(path);
+        try
+        {
+            LogFilters._logs = await Checker.isCorrectTxt(path);
+        }
+        catch
+        {
+            AnsiConsole.Clear();
+            AnsiConsole.MarkupLine($"[red]Путь некорректен.[/]");
+            return;
+        }
         if (LogFilters._logs.Count > 0)
         {
             AnsiConsole.MarkupLine("[dodgerblue2]Данные успешно загружены.[/]");

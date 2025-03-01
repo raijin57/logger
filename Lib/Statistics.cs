@@ -155,8 +155,9 @@ namespace ServiceLibrary
                 AnsiConsole.Clear();
                 return;
             }
-            if (!int.TryParse(n, out int N))
+            if (!int.TryParse(n, out int N) || N < 0)
             {
+                AnsiConsole.Clear();
                 AnsiConsole.MarkupLine("[red]Введите корректное число[/]");
                 return;
             }

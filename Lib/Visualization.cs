@@ -18,11 +18,13 @@ namespace ServiceLibrary
             while (true)
             {
                 AnsiConsole.Clear();
+
                 /* 
                  * Вычисление записей для текущей страницы: 
                  * Т.к. у нас PageSize логов на одной странице, значит для n-ой страницы мы первые n-1 * PageSize 
                  * логов пропускаем и берем следующие PageSize, которые и будут на этой странице.
                  */
+
                 List<Log> pageLogs = LogFilters._logs.Skip(page * PageSize).Take(PageSize).ToList();
                 Table table = new Table();
                 table.AddColumn("Дата");
@@ -37,7 +39,7 @@ namespace ServiceLibrary
                 var choice = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("Выберите действие:")
-                        .AddChoices(["Следующая страница", "Предыдущая страница", "Выход"])
+                        .AddChoices(["Следующая страница", "Предыдущая страница", "[italic underline]Назад[/]"])
                         .HighlightStyle(Spectre.Console.Color.DodgerBlue1));
                 switch (choice)
                 {
@@ -53,7 +55,7 @@ namespace ServiceLibrary
                             page--;
                         }
                         break;
-                    case "Выход":
+                    case "[italic underline]Назад[/]":
                         AnsiConsole.Clear();
                         return;
                 }
@@ -68,7 +70,7 @@ namespace ServiceLibrary
         private static int GetTotalTablePages(int totalItems)
         {
             // Думал как-то пояснить, но логически должно быть понятно почему именно столько страниц.
-            return (int)Math.Ceiling((double)totalItems / PageSize);
+            return totalItems == 0 ? 1 : (int)Math.Ceiling((double)totalItems / PageSize);
         }
 
         /// <summary>
@@ -94,7 +96,7 @@ namespace ServiceLibrary
                 // Ввод начальной даты.
                 while (true)
                 {
-                    AnsiConsole.MarkupLine("Введите начальную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
+                    AnsiConsole.MarkupLine("[dodgerblue2]Введите начальную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: [/]");
                     var input = Console.ReadLine();
                     if (input?.ToLower() == "0")
                     {
@@ -106,18 +108,18 @@ namespace ServiceLibrary
                         break;
                     }
                     AnsiConsole.Clear();
-                    AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
+                    AnsiConsole.MarkupLine("[red]Некорректная дата. Попробуйте снова.[/]");
                 }
 
                 // Ввод конечной даты.
                 while (true)
                 {
-                    AnsiConsole.MarkupLine("Введите конечную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
+                    AnsiConsole.MarkupLine("[dodgerblue2]Введите конечную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: [/]");
                     var input = Console.ReadLine();
                     if (input?.ToLower() == "0") return;
                     if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate)) break;
                     AnsiConsole.Clear();
-                    AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
+                    AnsiConsole.MarkupLine("[red]Некорректная дата. Попробуйте снова.[/]");
                 }
             }
             else
@@ -359,16 +361,14 @@ namespace ServiceLibrary
             plt.YLabel("Количество записей");
             plt.Title("Количество записей логов по дням");
             string outputPath = AnsiConsole.Ask<string>("[dodgerblue2]Введите путь куда сохранить изображение с графиком (без имени файла и расширения) или \"0\" для отмены: [/]");
-            if (!PathChecker.isCorrectPath(outputPath) || outputPath == "0")
+            if (!Checker.isCorrectPath(outputPath) || outputPath == "0")
             {
-                AnsiConsole.Clear();
                 return;
             }
             AnsiConsole.Clear();
-            string fileName = AnsiConsole.Ask<string>("[dodgerblue2]Введите имя для файла изображения (без .png) или \"0\" дл отмены: [/]");
-            if (!PathChecker.ValidateFileName(fileName) || fileName == "0")
+            string fileName = AnsiConsole.Ask<string>("[dodgerblue2]Введите имя для файла изображения (без .png) или \"0\" для отмены: [/]");
+            if (!Checker.ValidateFileName(fileName) || fileName == "0")
             {
-                AnsiConsole.Clear();
                 return;
             }
             AnsiConsole.Clear();
@@ -381,7 +381,7 @@ namespace ServiceLibrary
              */
 
             plt.SavePng($"{(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.png", 1000, 1000);
-            Console.WriteLine($"[dodgerblue2]График сохранён в файл: {(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.png[/]");
+            AnsiConsole.MarkupLine($"[dodgerblue2]График сохранён в файл: {(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.png[/]");
         }
     }
 }

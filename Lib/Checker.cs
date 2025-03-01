@@ -1,9 +1,9 @@
 ﻿using Logs;
 using Spectre.Console;
-using System.IO;
+using System.Text.RegularExpressions;
 namespace ServiceLibrary
 {
-    public static class PathChecker
+    public static class Checker
     {
         /// <summary>
         /// Метод, проверяющий корректность .txt файла и отправляющий его на чтение.
@@ -41,8 +41,10 @@ namespace ServiceLibrary
             catch (Exception ex)
             {
                 AnsiConsole.Clear();
-                return new List<Log>();
+                throw ex;
             }
+
+
         }
 
         /// <summary>
@@ -63,6 +65,10 @@ namespace ServiceLibrary
                 if (string.IsNullOrWhiteSpace(path))
                 {
                     throw new ArgumentException("Путь к файлу не может быть пустым.");
+                }
+                if (!Path.Exists(path))
+                {
+                    throw new DirectoryNotFoundException("Указанной директории не найдено.");
                 }
                 try
                 {
@@ -91,12 +97,31 @@ namespace ServiceLibrary
         {
             try
             {
+                if (name.Contains(Path.DirectorySeparatorChar))
+                {
+                    throw new ArgumentException("Имя файла некорректно.");
+                }
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    throw new ArgumentException("Имя файла некорректно.");
+                }
+                if (name.Length >= 255)
+                {
+                    throw new ArgumentException("Имя файла некорректно.");
+                }
+                if (!Regex.IsMatch(name, @"^[A-Za-zА-Яа-я]+$"))
+                {
+                    throw new ArgumentException("Имя файла некорректно.");
+                }
+
                 // Логика такая: если мы смогли создать такой файл, значит его имя корректно.
                 FileStream file = File.Open(name, FileMode.Open);
                 if (file != null) file.Close();
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
+                AnsiConsole.Clear();
+                AnsiConsole.MarkupLine($"[red]{ex.Message}[/]");
                 return false;
             }
             catch (FileNotFoundException)
