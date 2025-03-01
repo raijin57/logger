@@ -41,12 +41,14 @@ namespace Logs
                             }
                             catch (FormatException)
                             { 
+                                // Не смоги спарсить время (без времени не может быть лога) - пропускаем и считаем пропущенный.
                                 skippedCounter++;
                                 continue;
                             }
                         }
                         else
                         {
+                            // Формат входных неверный.
                             skippedCounter++;
                             continue;
                         }

@@ -23,7 +23,7 @@ public static class MenuHandler
                     await LoadData();
                     // Останавливаем сервер, если он был запущен до этого (например, если загрузили новый файл, не завершая программу).
                     HTTPServer.Stop();
-                    // Запуск HTTP-сервера
+                    // Запуск HTTP-сервера после прочтения файла.
                     HTTPServer.Start();
                     break;
                 case "Экспортировать данные":
@@ -36,7 +36,7 @@ public static class MenuHandler
                     break;
                 case "Расширенная статистика":
                     AnsiConsole.Clear();
-                    Statistics.Menu();
+                    Statistics.StatisticsMenu();
                     break;
                 case "Визуализация":
                     AnsiConsole.Clear();
@@ -58,6 +58,11 @@ public static class MenuHandler
         var path = AnsiConsole.Ask<string>("Введите путь к файлу или \"0\" для отмены:");
         AnsiConsole.Clear();
         if (path == "0") return;
+        /*
+         * Этот метод находится в этой библиотеке, а не в Logs ибо нужен класс PathChecker 
+         * (Зависимости Logs от ServiceLibrary быть не может, так как ServiceLibrary нужно знать о
+         * структуре Log и мы не можем сделать петлю в зависимостях).
+         */
         LogFilters._logs = await PathChecker.isCorrectTxt(path);
         if (LogFilters._logs.Count > 0)
         {

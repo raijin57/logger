@@ -27,11 +27,18 @@ namespace ServiceLibrary
             if (!PathChecker.ValidateFileName(fileName)) return;
             try
             {
-                using (StreamWriter writer = new StreamWriter($"{(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.txt", false)) // false означает перезапись файла
+                /*
+                * Если путь введён в конце с символом, используемым
+                * для разделения элементов в пути, то удаляем его (чтобы
+                * путь был корректен и не состоял из двух подряд разделителей)
+                * и передаем "склеенный" корректный путь для создания файла.
+                */
+                // Аргумент false означает что будем перезаписывать уже существующий файл.
+                using (StreamWriter writer = new StreamWriter($"{(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.txt", false))
                 {
                     foreach (Log line in LogFilters._logs)
                     {
-                        writer.WriteLine(line); // Записываем каждую строку в файл
+                        writer.WriteLine(line); 
                     }
                 }
                 AnsiConsole.MarkupLine($"[green]Логи были сохранены в {(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.txt[/]");

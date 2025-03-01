@@ -54,11 +54,8 @@ namespace Logs
             {
                 AnsiConsole.MarkupLine("Введите начальную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
                 var input = Console.ReadLine();
-                if (input?.ToLower() == "0")
-                    return null;
-
-                if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate))
-                    break;
+                if (input?.ToLower() == "0") return null;
+                if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate)) break;
                 AnsiConsole.Clear();
                 AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
             }
@@ -68,15 +65,12 @@ namespace Logs
             {
                 AnsiConsole.MarkupLine("Введите конечную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
                 var input = Console.ReadLine();
-                if (input?.ToLower() == "0")
-                    return null;
+                if (input?.ToLower() == "0") return null;
 
-                if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate))
-                    break;
+                if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate)) break;
                 AnsiConsole.Clear();
                 AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
             }
-
             return FilterByDate(startDate, endDate);
         }
 
@@ -96,12 +90,10 @@ namespace Logs
             {
                 filterDescriptions.Add(GetFilterDescription(filter));
             }
-
             var filterToRemove = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("Выберите фильтр для удаления:")
                     .AddChoices(filterDescriptions));
-
             var index = filterDescriptions.IndexOf(filterToRemove);
             filters.RemoveAt(index);
             AnsiConsole.MarkupLine("[green]Фильтр удалён.[/]");
@@ -115,11 +107,11 @@ namespace Logs
         public static string GetFilterDescription(Func<Log, bool> filter)
         {
             if (filter.Method == FilterByDate(default, default).Method)
-                return $"Фильтр по дате";
+                return $"Фильтр по дате #{filters.IndexOf(filter) + 1}";
             if (filter.Method == FilterByLevel(default).Method)
-                return "Фильтр по уровню важности";
+                return $"Фильтр по уровню важности #{filters.IndexOf(filter) + 1}";
             if (filter.Method == FilterByMessage(default).Method)
-                return "Фильтр по ключевому слову";
+                return $"Фильтр по ключевому слову #{filters.IndexOf(filter) + 1}";
             return "Неизвестный фильтр";
         }
 

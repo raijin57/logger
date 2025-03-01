@@ -6,30 +6,24 @@ namespace ServiceLibrary
 {
     public static class Visualization
     {
-        // Количество записей на странице
+        // Количество записей на одной странице табличного вида.
         private const int PageSize = 10;
         /// <summary>
         /// Метод для визуализации данных, используя таблицу.
         /// </summary>
         /// <param name="logs">Список с логами.</param>
-        public static void Table(List<Log> logs)
+        public static void TableVisualization()
         {
-            if (logs == null || logs.Count == 0)
-            {
-                AnsiConsole.MarkupLine("[red]Сперва введите данные в программу.[/]");
-                return;
-            }
             int page = 0;
             while (true)
             {
                 AnsiConsole.Clear();
-                /* Вычисление записей для текущей страницы
-                 * 
+                /* 
+                 * Вычисление записей для текущей страницы: 
                  * Т.к. у нас PageSize логов на одной странице, значит для n-ой страницы мы первые n-1 * PageSize 
                  * логов пропускаем и берем следующие PageSize, которые и будут на этой странице.
                  */
-                List<Log> pageLogs = logs.Skip(page * PageSize).Take(PageSize).ToList();
-
+                List<Log> pageLogs = LogFilters._logs.Skip(page * PageSize).Take(PageSize).ToList();
                 Table table = new Table();
                 table.AddColumn("Дата");
                 table.AddColumn("Уровень важности");
@@ -39,7 +33,7 @@ namespace ServiceLibrary
                     table.AddRow(log.Timestamp.ToString(), log.ImportanceLevel, log.Message);
                 }
                 AnsiConsole.Write(table);
-                AnsiConsole.MarkupLine($"[dodgerblue3]Страница {page + 1} из {GetTotalPages(logs.Count)}[/]");
+                AnsiConsole.MarkupLine($"[dodgerblue3]Страница {page + 1} из {GetTotalTablePages(LogFilters._logs.Count)}[/]");
                 var choice = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
                         .Title("Выберите действие:")
@@ -47,7 +41,7 @@ namespace ServiceLibrary
                 switch (choice)
                 {
                     case "Следующая страница":
-                        if ((page + 1) * PageSize < logs.Count)
+                        if ((page + 1) * PageSize < LogFilters._logs.Count)
                         {
                             page++;
                         }
@@ -70,8 +64,9 @@ namespace ServiceLibrary
         /// </summary>
         /// <param name="totalItems">Количество элементов, которые нужно разместить в таблице.</param>
         /// <returns>Количество страниц.</returns>
-        private static int GetTotalPages(int totalItems)
+        private static int GetTotalTablePages(int totalItems)
         {
+            // Думал как-то пояснить, но логически должно быть понятно почему именно столько страниц.
             return (int)Math.Ceiling((double)totalItems / PageSize);
         }
 
@@ -79,17 +74,10 @@ namespace ServiceLibrary
         /// Метод, выводящий данные в виде диаграммы.
         /// </summary>
         /// <param name="logs">Список логов, которые будем визуализировать.</param>
-        public static void BreakdownChart(List<Log> logs)
+        public static void BreakdownChartVisualization()
         {
-            if (LogFilters._logs == null)
-            {
-                AnsiConsole.MarkupLine("[red]Сперва введите данные в программу.[/]");
-                return;
-            }
-
             DateTime startDate;
             DateTime endDate;
-
             string choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                 .Title("Вывести данные за всё время или за период?")
@@ -114,20 +102,13 @@ namespace ServiceLibrary
                     AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
                 }
 
-                // Ввод конечной даты
+                // Ввод конечной даты.
                 while (true)
                 {
                     AnsiConsole.MarkupLine("Введите конечную дату (гггг-мм-дд чч:мм:сс) или \"0\" для выхода: ");
                     var input = Console.ReadLine();
-                    if (input?.ToLower() == "0")
-                    {
-                        return;
-                    }
-
-                    if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate))
-                    {
-                        break;
-                    }
+                    if (input?.ToLower() == "0") return;
+                    if (DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out endDate)) break;
                     AnsiConsole.Clear();
                     AnsiConsole.MarkupLine("Некорректная дата. Попробуйте снова.");
                 }
@@ -138,12 +119,10 @@ namespace ServiceLibrary
                 startDate = DateTime.MinValue;
                 endDate = DateTime.MaxValue;
             }
-
-
             AnsiConsole.Clear();
             // Фильтрация логов, с выбором попавших в диапазон.
-            var filteredLogs = logs
-                .Where(log => log.Timestamp >= startDate && log.Timestamp <= endDate)
+            var filteredLogs = LogFilters._logs
+                .Where(LogFilters.FilterByDate(startDate, endDate))
                 .ToList();
 
             if (filteredLogs.Count == 0)
@@ -161,19 +140,35 @@ namespace ServiceLibrary
                     Count = group.Count()
                 })
                 .ToList();
-
+            // Переменная общего количества логов в выбранном диапазоне.
+            int intervalLogsCounter = 0;
+            foreach (var group in logGroups)
+            {
+                intervalLogsCounter += group.Count;
+            }
             // Создание диаграммы.
             var chart = new BreakdownChart()
                 .FullSize()
                 .ShowPercentage();
+
+            /*
+             * В диаграмме разные уровни важности должны отображаться разными цветами, отсюда возникла задача:
+             * Как, имея только количество групп, элементов в нём и не зная сколько всего групп (пусть x) указать
+             * x различных цветов для диаграммы?
+             * Решение:
+             * Переменная colorMixer - как старт. Умножаю её на количество элементов в группе (которая взята циклом ниже)
+             * и беру остаток от 255 (всего столько id цветов), а в конце каждого цикла умножаю переменную на 11 (почему? хочется!).
+             * Так мы и получаем различные цвета. Конечно, есть вероятность совпадений и выпадения чёрного, не отличимого от фона консоли,
+             * но я считаю своё решение достойным.
+             */
 
             int colorMixer = 1;
             // Добавление данных в диаграмму.
             foreach (var group in logGroups)
             {
                 colorMixer = (colorMixer * group.Count) % 255;
-                chart.AddItem(group.Level, group.Count, colorMixer);
-                colorMixer *= 3;
+                chart.AddItem(group.Level, Math.Round((double)group.Count / (double)intervalLogsCounter * 100), colorMixer);
+                colorMixer *= 11;
             }
             AnsiConsole.Write(chart);
             AnsiConsole.MarkupLine("[dim gray]Нажмите Enter для выхода.[/]");
@@ -185,49 +180,84 @@ namespace ServiceLibrary
         /// Метод, выводящий данные о логах, отображая их в календаре.
         /// </summary>
         /// <param name="logs">Список обрабатываемых логов.</param>
-        public static void Calendar(List<Log> logs)
+        public static void CalendarVisualization()
         {
-            if (logs.Count == 0)
+            if (LogFilters._logs.Count == 0)
             {
                 AnsiConsole.MarkupLine("[red]Нет данных для отображения.[/]");
                 return;
             }
-
-            // Находим минимальную и максимальную даты.
-            var minDate = logs.Min(log => log.Timestamp);
-            var maxDate = logs.Max(log => log.Timestamp);
-
-            // Группировка логов по дням.
-            var logsByDay = logs
+            // Находим минимальную и максимальную даты из логов.
+            var minDate = LogFilters._logs.Min(log => log.Timestamp);
+            var maxDate = LogFilters._logs.Max(log => log.Timestamp);
+            // Группировка логов по дням в словарь.
+            Dictionary<DateTime, int> logsByDay = LogFilters._logs
                 .GroupBy(log => log.Timestamp.Date)
                 .ToDictionary(group => group.Key, group => group.Count());
-
             // Отображение календарей для каждого месяца в диапазоне.
             for (var date = minDate; date <= maxDate; date = date.AddMonths(1))
             {
                 int year = date.Year;
                 int month = date.Month;
-                var calendar = new Spectre.Console.Calendar(year, month)
-                    .HighlightStyle(Style.Plain);
 
-                // Добавление событий для дней с записями.
-                foreach (var day in logsByDay)
+                /*
+                 * Создаем таблицу для календаря, т.к. Calendar не может 
+                 * конкретному дню менять цвет (для интенсивности).
+                 */
+
+                var table = new Table();
+                // Подписываем месяц.
+                table.AddColumn($"{CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month).Replace(CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month)[0], char.ToUpper(CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month)[0]))} {year}");
+                // Получаем дни месяца.
+                var daysInMonth = DateTime.DaysInMonth(year, month);
+                // Первый день месяца.
+                var firstDayOfMonth = new DateTime(year, month, 1);
+                // День недели, с которого месяц начинается.
+                var startingDayOfWeek = (int)firstDayOfMonth.DayOfWeek;
+                // Создаем строки для календаря.
+                var currentDay = 1;
+                // В календаре максимум 6 строк.
+                for (int i = 0; i < 6; i++)
                 {
-                    if (day.Key.Year == year && day.Key.Month == month)
+                    var week = new List<string>();
+                    // В неделе 7 дней.
+                    for (int j = 0; j < 7; j++)
                     {
-                        int dayOfMonth = day.Key.Day;
-                        int logCount = day.Value;
-
-                        // Определение цвета в зависимости от количества записей.
-                        Spectre.Console.Color color = GetColorForLogCount(logCount);
-
-                        // Добавление события с настройкой стиля.
-                        calendar.AddCalendarEvent(year, month, dayOfMonth)
-                                .HighlightStyle(color);
+                        if (i == 0 && j < startingDayOfWeek)
+                        {
+                            // До первого дня месяца пустые ячейки.
+                            week.Add("   "); 
+                        }
+                        else if (currentDay > daysInMonth)
+                        {
+                            // Пустые ячейки после последнего дня.
+                            week.Add("   "); 
+                        }
+                        else
+                        {
+                            var currentDate = new DateTime(year, month, currentDay);
+                            // Если в этот день записан лог, то..
+                            if (logsByDay.ContainsKey(currentDate))
+                            {
+                                int logCount = logsByDay[currentDate];
+                                // ..получаем день в зависимости от интенсивности..
+                                var color = GetColorForDay(logCount);
+                                // .. и добавляем день с цветом в таблицу.
+                                week.Add($"[{color}]{currentDay,2}[/]"); 
+                            }
+                            else
+                            {
+                                // Если в этот день логов нет, добавляем день с выравниванием по правому краю в 2 символа.
+                                week.Add($"{currentDay,2}");
+                            }
+                            currentDay++;
+                        }
                     }
+                    // Добавляем получившуюся строку календаря.
+                    table.AddRow(string.Join(" ", week));
                 }
-
-                AnsiConsole.Write(calendar);
+                // Выводим наш "календарь".
+                AnsiConsole.Write(table);
             }
             AnsiConsole.MarkupLine("[dim grey]Нажмите Enter для выхода.[/]");
             Console.ReadLine();
@@ -239,16 +269,15 @@ namespace ServiceLibrary
         /// </summary>
         /// <param name="logCount">Количество логов в какой-то день</param>
         /// <returns></returns>
-        private static Spectre.Console.Color GetColorForLogCount(int logCount)
+        private static Spectre.Console.Color GetColorForDay(int logCount)
         {
             if (logCount == 0) return Spectre.Console.Color.Default;
-
             return logCount switch
             {
-                <= 5 => Spectre.Console.Color.Green1,
-                <= 10 => Spectre.Console.Color.Green3,
-                <= 20 => Spectre.Console.Color.Green4,
-                _ => Spectre.Console.Color.DarkOliveGreen1
+                <= 3 => Spectre.Console.Color.Lime,
+                <= 5 => Spectre.Console.Color.Green3,
+                <= 10 => Spectre.Console.Color.Green,
+                _ => Spectre.Console.Color.DarkGreen
             };
         }
 
@@ -271,17 +300,17 @@ namespace ServiceLibrary
                 switch (choice)
                 {
                     case "Таблицей":
-                        Table(LogFilters._logs);
+                        TableVisualization();
                         break;
                     case "Календарем":
-                        Calendar(LogFilters._logs);
+                        CalendarVisualization();
                         break;
                     case "Диаграммой":
-                        BreakdownChart(LogFilters._logs);
+                        BreakdownChartVisualization();
                         AnsiConsole.Clear();
                         break;
                     case "Создать и экспортировать гистограмму":
-                        PlotLogsOverTime(LogFilters._logs);
+                        LogsPlotHystogram();
                         break;
                     case "Выход":
                         AnsiConsole.Clear();
@@ -294,16 +323,10 @@ namespace ServiceLibrary
         /// Метод создания гистограммы.
         /// </summary>
         /// <param name="logs">Список логов, для которых формируется гистограмма.</param>
-        public static void PlotLogsOverTime(List<Log> logs)
+        public static void LogsPlotHystogram()
         {
-            if (logs.Count == 0)
-            {
-                AnsiConsole.WriteLine("Нет данных для построения графика.");
-                return;
-            }
-
             // Группировка логов по дням.
-            var logsByDay = logs
+            var logsByDay = LogFilters._logs
                 .GroupBy(log => log.Timestamp.Date) // Группируем по дате (без времени).
                 .OrderBy(group => group.Key)   // Сортируем по дате.
                 .ToList();
@@ -316,16 +339,18 @@ namespace ServiceLibrary
             plt.XLabel("Дата");
             plt.YLabel("Количество записей");
             plt.Title("Количество записей логов по дням");
-            string outputPath = AnsiConsole.Ask<string>("Введите путь куда сохранить изображение с графиком: ");
+            string outputPath = AnsiConsole.Ask<string>("Введите путь куда сохранить изображение с графиком (без имени файла и расширения): ");
             if (!PathChecker.isCorrectPath(outputPath)) return;
             string fileName = AnsiConsole.Ask<string>("Введите имя для файла изображения (без .png): ");
             if (!PathChecker.ValidateFileName(fileName)) return;
+
             /*
              * Если путь введён в конце с символом, используемым
              * для разделения элементов в пути, то удаляем его (чтобы
              * путь был корректен и не состоял из двух подряд разделителей)
              * и передаем "склеенный" корректный путь для создания файла.
              */
+
             plt.SavePng($"{(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.png", 1000, 1000);
             Console.WriteLine($"График сохранён в файл: {(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.png");
         }

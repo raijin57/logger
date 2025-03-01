@@ -16,6 +16,7 @@ namespace ServiceLibrary
         {
             try
             {
+                // Сперва проверяем корректность пути.
                 if (isCorrectPath(path))
                 {
                     try
@@ -29,7 +30,7 @@ namespace ServiceLibrary
                     {
                         throw new UnauthorizedAccessException("Недостаточно прав для доступа к файлу.");
                     }
-                    // Отправляем файл на чтение, если путь оказался корректен (отправляем сразу отсюда, ибо зачем нам ещё проверка на корректность пути, если не для этого метода?).
+                    // Отправляем файл на чтение, если путь оказался корректен (отправляем сразу отсюда, ибо зачем нам ещё проверка на корректность .txt, если не для этого метода?).
                     return await LogReader.Read(path);
                 }
                 else
@@ -66,6 +67,7 @@ namespace ServiceLibrary
                 }
                 try
                 {
+                    // Если по этому пути создаётся FileInfo <=> путь корректен.
                     var tempFileInfo = new FileInfo(path);
                     return true;
                 }

@@ -34,7 +34,7 @@ namespace ServiceLibrary
         }
 
         /// <summary>
-        /// Метод, для остановки сервера.
+        /// Метод, для остановки сервера для предотвращения запуска в тот же хост.
         /// </summary>
         public static void Stop()
         {
@@ -70,7 +70,7 @@ namespace ServiceLibrary
         {
             try
             {
-                // Объекты запроса и ответа из контекста.
+                // Объекты запроса из контекста и ответа.
                 var request = context.Request;
                 var response = context.Response;
                 AnsiConsole.Clear();
@@ -85,13 +85,14 @@ namespace ServiceLibrary
                     // Проверяем, указаны ли параметры from и to.
                     if (!string.IsNullOrEmpty(from) && DateTime.TryParse(from, out _) && !string.IsNullOrEmpty(to) && DateTime.TryParse(to, out _))
                     {
-                        // Применяем фильтр по дате
+                        // Применяем фильтр по дате.
                         var filteredLogs = FilterLogs(from, to);
                         // Формируем ответ в JSON.
                         var jsonResponse = JsonConvert.SerializeObject(filteredLogs);
                         response.ContentType = "application/json";
                         // Возвращаем статус что всё хорошо.
                         response.StatusCode = (int)HttpStatusCode.OK;
+                        // Записываем результат побайтово.
                         response.OutputStream.Write(Encoding.UTF8.GetBytes(jsonResponse));
                     }
                     else
@@ -156,6 +157,7 @@ namespace ServiceLibrary
         /// <returns>Список с отфильтрованными логами.</returns>
         private static List<Log> FilterLogs(string from, string to)
         {
+            // Не будет ошибки даже если нам не передадут параметры.
             if (!string.IsNullOrEmpty(from) && DateTime.TryParse(from, out var fromDate) && !string.IsNullOrEmpty(to) && DateTime.TryParse(to, out var toDate))
             {
                 // Применяем фильтр по дате, если передали параметры.
