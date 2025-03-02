@@ -39,15 +39,16 @@ namespace ServiceLibrary
                 * путь был корректен и не состоял из двух подряд разделителей)
                 * и передаем "склеенный" корректный путь для создания файла.
                 */
-
-                // Аргумент false означает что будем перезаписывать уже существующий файл.
-                using (StreamWriter writer = new StreamWriter($"{(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.txt", false))
+                string savePath = $"{(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.txt";
+                // Вызываем функцию, чтобы узнать перезаписывать ли файл при его существовании (если отказ на перезапись - дописываем в существующий).
+                using (StreamWriter writer = new StreamWriter(savePath, Checker.DoFileExist(savePath)))
                 {
                     foreach (Log line in LogFilters._logs)
                     {
                         writer.WriteLine(line); 
                     }
                 }
+                AnsiConsole.Clear();
                 AnsiConsole.MarkupLine($"[dodgerblue2]Логи были сохранены в {(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.txt[/]");
             }
             catch

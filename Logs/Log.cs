@@ -17,7 +17,7 @@
         }
         public override string ToString()
         {
-            return $"[{Timestamp}] [{ImportanceLevel}] {Message}";
+            return $"[{Timestamp.ToString("yyyy-MM-dd HH:mm:ss")}] [{ImportanceLevel}] {Message}";
         }
     }
 }

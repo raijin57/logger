@@ -1,6 +1,7 @@
 ﻿using Logs;
 using ScottPlot;
 using Spectre.Console;
+using System.Collections.Generic;
 using System.Globalization;
 namespace ServiceLibrary
 {
@@ -32,7 +33,7 @@ namespace ServiceLibrary
                 table.AddColumn("Сообщение");
                 foreach (var log in pageLogs)
                 {
-                    table.AddRow(log.Timestamp.ToString(), log.ImportanceLevel, log.Message);
+                    table.AddRow(log.Timestamp.ToString("yyyy-MM-dd HH:mm:ss"), log.ImportanceLevel, log.Message);
                 }
                 AnsiConsole.Write(table);
                 AnsiConsole.MarkupLine($"[dodgerblue2]Страница {page + 1} из {GetTotalTablePages(LogFilters._logs.Count)}[/]");
@@ -184,6 +185,7 @@ namespace ServiceLibrary
             }
             AnsiConsole.Write(chart);
             AnsiConsole.MarkupLine("[dim gray]Нажмите Enter для выхода.[/]");
+            AnsiConsole.Clear();
             Console.ReadLine();
         }
 
@@ -353,7 +355,7 @@ namespace ServiceLibrary
             // Добавляем данные в гистограмму.
             var barPlot = plt.Add.Bars(dates, counts);
             plt.Axes.DateTimeTicksBottom();
-            // Минимальное по оси Y - 0.
+            // Минимальное значение по оси Y - 0.
             plt.Axes.Left.Min = 0;
             // Отметки по оси Y только целые числа без отметок между целыми.
             ScottPlot.TickGenerators.EvenlySpacedMinorTickGenerator minorTickGen = new(0);
@@ -384,17 +386,28 @@ namespace ServiceLibrary
              * путь был корректен и не состоял из двух подряд разделителей)
              * и передаем "склеенный" корректный путь для создания файла.
              */
-            try
-            {
-                plt.SavePng($"{(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.png", 1000, 1000);
-            }
-            catch (UnauthorizedAccessException)
+            string filePath = $"{(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.png";
+            if (Checker.DoFileExist(filePath))
             {
                 AnsiConsole.Clear();
-                AnsiConsole.MarkupLine("[red]Доступ к директории запрещён.[/]");
                 return;
             }
-            AnsiConsole.MarkupLine($"[dodgerblue2]График сохранён в файл: {(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.png[/]");
+            else
+            {
+                try
+                {
+                    File.Delete(filePath);
+                    plt.SavePng(filePath, 1000, 1000);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    AnsiConsole.Clear();
+                    AnsiConsole.MarkupLine("[red]Доступ к директории запрещён.[/]");
+                    return;
+                }
+                AnsiConsole.Clear();
+                AnsiConsole.MarkupLine($"[dodgerblue2]График сохранён в файл: {(outputPath.EndsWith(Path.DirectorySeparatorChar) ? outputPath.Remove(outputPath.Length - 1) : outputPath)}{Path.DirectorySeparatorChar}{fileName}.png[/]");
+            }
         }
     }
 }

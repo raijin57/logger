@@ -136,5 +136,29 @@ namespace ServiceLibrary
             }
             return true;
         }
+
+        /// <summary>
+        /// Метод, проверяющий существование файла по переданному пути.
+        /// </summary>
+        /// <param name="filePath">Путь к файлу.</param>
+        /// <returns>true или false в зависимости от выбора пользователя.</returns>
+        public static bool DoFileExist(string filePath)
+        {
+            if (Path.Exists(filePath))
+            {
+                AnsiConsole.Clear();
+                return AnsiConsole.Prompt(
+                    new TextPrompt<bool>($"[dodgerblue2]Перезаписать существующий по этому пути файл? ({Path.GetFullPath(filePath)}) [/]")
+                    .AddChoice(true)
+                    .AddChoice(false)
+                    .WithConverter(choice => choice ? "н" : "д")
+                    );
+            }
+            else
+            {
+                AnsiConsole.Clear();
+                return false;
+            }
+        }
     }
 }
